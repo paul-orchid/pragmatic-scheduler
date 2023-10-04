@@ -1,7 +1,7 @@
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
 import { SchedulerContext } from './Scheduler';
 import { Box, styled } from '@mui/material';
-import { CalEvent } from '../scheduler';
+import { CalEvent } from '../types';
 import { Cell } from '../layout/Cell';
 import { EventTile } from './EventTile';
 

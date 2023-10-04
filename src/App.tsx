@@ -4,7 +4,7 @@ import './App.css';
 import { Box, Typography } from '@mui/material';
 import { startOfToday } from 'date-fns';
 import { Scheduler } from './components/Scheduler';
-import { CalEvent } from './scheduler';
+import { CalEvent } from './types';
 import { SchedulerDateControls } from './components/SchedulerDateControls';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';

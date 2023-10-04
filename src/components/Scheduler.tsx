@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { styled } from '@mui/material';
-import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail } from '../scheduler';
+import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail } from '../types';
 import { addDays, endOfDay } from 'date-fns';
 import { TimelineView } from '../views/TimelineView';
 import { defaultConfig, defaultDivisionDetails } from '../constants/defaults';

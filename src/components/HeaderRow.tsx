@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import { SchedulerContext } from './Scheduler';
 import { Box, Typography, useTheme } from '@mui/material';
-import { ScheduleDay } from '../scheduler';
+import { ScheduleDay } from '../types';
 import { format, isSameDay } from 'date-fns';
 import { BorderedBox } from '../layout/BorderedBox';
 
@@ -25,7 +25,7 @@ const HeaderCell = ({ day, ...other }: { day: ScheduleDay }) => {
   // account for padding and border: (spacing x 8) + 1px + 1px
   const minWidth = useMemo(
     () => config.divisionMinWidth + parseInt(theme.spacing(8)) + 2,
-    [config.divisionMinWidth, theme]
+    [config.divisionMinWidth, theme],
   );
   return (
     <BorderedBox flexDirection="column" {...other}>

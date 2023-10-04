@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { CalEvent } from '../scheduler';
+import { CalEvent } from '../types';
 import { SchedulerContext } from '../components/Scheduler';
 import { addDays } from 'date-fns';
 import { ResourceRowContext } from '../components/ResourceRow';

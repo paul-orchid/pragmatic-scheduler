@@ -3,7 +3,7 @@ import { Resizable, ResizeCallbackData } from 'react-resizable';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import 'react-resizable/css/styles.css';
 import { Box, Typography, styled, useTheme } from '@mui/material';
-import { CalEvent } from '../scheduler';
+import { CalEvent } from '../types';
 import { useCalcEventPosition } from '../hooks/useCalcEventPosition';
 import { SchedulerContext } from './Scheduler';
 

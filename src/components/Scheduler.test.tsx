@@ -5,7 +5,7 @@
 import { render, screen } from '@testing-library/react';
 import { Scheduler } from './Scheduler';
 import React from 'react';
-import { CalEvent } from '../scheduler';
+import { CalEvent } from '../types';
 import { divisionDetails, events, resources } from '../data/scheduler';
 
 const TestScheduler = ({

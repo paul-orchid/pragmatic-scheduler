@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
-import { styled, ThemeProvider, Theme } from '@mui/material';
+import { styled } from '@mui/material';
 import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail } from '../scheduler';
-import { merge } from 'lodash';
 import { addDays, endOfDay } from 'date-fns';
 import { TimelineView } from '../views/TimelineView';
 import { defaultConfig, defaultDivisionDetails } from '../constants/defaults';
 import { useDateToDivisions } from '../hooks/useDateToDivisions';
+import { BorderedBox } from '../layout/BorderedBox';
 declare module '@mui/material/styles' {
   interface TypographyVariants {
     tableHeader: React.CSSProperties;
@@ -40,31 +40,9 @@ export const SchedulerContext = React.createContext<{
   calendarBounds: { start: new Date(), end: new Date(), range: 0, totalDivisions: 0 },
 });
 
-const Container = styled('div')(() => ({
-  display: 'flex',
+const Container = styled(BorderedBox)(() => ({
   flexDirection: 'column',
-  flex: 1,
 }));
-
-const mergedTheme = (outerTheme: Theme) =>
-  merge(outerTheme, {
-    typography: {
-      subtitle2: {
-        fontSize: 14,
-        fontWeight: 800,
-        lineHeight: '18px',
-        letterSpacing: '0.5px',
-      },
-      tableHeader: {
-        fontFamily: outerTheme.typography.subtitle2.fontFamily,
-        fontSize: 14,
-        fontWeight: 600,
-        lineHeight: '18px',
-        letterSpacing: '0.15px',
-        textAlign: 'center',
-      },
-    },
-  });
 
 export const Scheduler = ({
   activeDate,
@@ -88,7 +66,7 @@ export const Scheduler = ({
   const lastDay = useMemo(() => endOfDay(addDays(activeDate, 1)), [activeDate]);
   const days = useMemo(
     () => [firstDay, activeDate, lastDay].map((date) => dateToDivisions(date, divisionDetails)),
-    [activeDate, dateToDivisions, divisionDetails, firstDay, lastDay]
+    [activeDate, dateToDivisions, divisionDetails, firstDay, lastDay],
   );
 
   const range = lastDay.getTime() - firstDay.getTime();
@@ -107,7 +85,7 @@ export const Scheduler = ({
     return events.filter(
       (event) =>
         (event.startTime >= firstDay && event.startTime <= lastDay) ||
-        (event.endTime >= firstDay && event.endTime <= lastDay)
+        (event.endTime >= firstDay && event.endTime <= lastDay),
     );
   }, [events, firstDay, lastDay]);
 
@@ -123,11 +101,9 @@ export const Scheduler = ({
         onEventChange: onEventChange,
       }}
     >
-      <ThemeProvider theme={mergedTheme}>
-        <Container>
-          <TimelineView />
-        </Container>
-      </ThemeProvider>
+      <Container>
+        <TimelineView />
+      </Container>
     </SchedulerContext.Provider>
   );
 };

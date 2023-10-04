@@ -21,8 +21,11 @@ export const EventTile = ({ event: startEvent, ...otherProps }: { event: CalEven
   const theme = useTheme();
   const { onEventChange } = useContext(SchedulerContext);
   const [event, setEvent] = useState(startEvent);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
+    // if event changes, reset the key to force a re-render otherwise transforms from drag will not be reset
+    setKey((k) => k + 1);
     setEvent(startEvent);
   }, [startEvent]);
   useEffect(() => {
@@ -93,6 +96,7 @@ export const EventTile = ({ event: startEvent, ...otherProps }: { event: CalEven
       // onStart={handleDragStart}
       // onDrag={handleDrag}
       onStop={handleDragStop}
+      key={key}
     >
       <Resizable
         width={width}

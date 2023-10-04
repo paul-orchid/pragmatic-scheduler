@@ -9,13 +9,21 @@ import { SchedulerDateControls } from './components/SchedulerDateControls';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { theme } from './layout/theme';
-import { divisionDetails, events, resources } from './data/scheduler';
+import { divisionDetails, events as rawEvents, resources } from './data/scheduler';
 
 function App() {
   const [activeDate, setActiveDate] = useState(startOfToday());
+  const [events, setEvents] = useState(rawEvents);
+  console.log('events: ', events);
 
   const handleEventChange = (event: CalEvent) => {
     console.log('dashboard event changed', event);
+    setEvents((prevEvents) => {
+      const index = prevEvents.findIndex((e) => e.id === event.id);
+      const newEvents = [...prevEvents];
+      newEvents[index] = event;
+      return newEvents;
+    });
   };
 
   return (

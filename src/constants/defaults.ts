@@ -1,4 +1,4 @@
-import { Config, DivisionDetail } from '../scheduler';
+import { Config, DivisionDetail } from '../types';
 
 export const defaultConfig: Config = {
   resourceColumnWidth: 220,

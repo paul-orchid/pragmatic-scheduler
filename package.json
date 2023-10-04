@@ -1,6 +1,6 @@
 {
   "name": "pragmatic-scheduler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React resource scheduler",
   "main": "dist/pragmatic-scheduler.js",
   "types": "dist/pragmatic-scheduler.d.ts",

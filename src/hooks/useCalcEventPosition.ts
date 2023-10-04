@@ -45,7 +45,7 @@ export const useCalcEventPosition = (event: CalEvent) => {
         ) {
           const fractionOfDivision = Math.max(
             (event.endTime.getTime() - division.startTime.getTime()) / divisionRange,
-            0
+            0,
           );
           // right = (1 - (divisionCount + fractionOfDivision) / totalDivisions) * containerWidth;
           width = containerWidth - (1 - (divisionCount + fractionOfDivision) / totalDivisions) * containerWidth - left;

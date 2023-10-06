@@ -1,10 +1,11 @@
 import { addMinutes, setHours, startOfToday } from 'date-fns';
-import { CalEvent, DivisionDetail, Resource } from '../scheduler';
+import { CalEvent, DivisionDetail, Resource } from '../types';
 import { Colors } from '../constants/colors';
 
 export const resources: Resource[] = [
   { id: '1', name: 'Andy' },
   { id: '2', name: 'Adam' },
+  { id: '3', name: 'Sarah' },
 ];
 
 export const events: CalEvent[] = [
@@ -34,6 +35,46 @@ export const events: CalEvent[] = [
     title: 'Adam 8 - 10pm',
     bgColor: Colors.gold,
     textColor: 'black',
+  },
+  {
+    id: '4',
+    startTime: setHours(startOfToday(), 10),
+    endTime: setHours(startOfToday(), 12),
+    title: 'UA Ev 1',
+    bgColor: Colors.fluroRed,
+    textColor: 'black',
+  },
+  {
+    id: '5',
+    startTime: setHours(startOfToday(), 14),
+    endTime: setHours(startOfToday(), 15),
+    title: 'UA Ev 2',
+    bgColor: Colors.primaryMain,
+    textColor: 'white',
+  },
+  {
+    id: '6',
+    startTime: setHours(startOfToday(), 20),
+    endTime: setHours(startOfToday(), 22),
+    title: 'UA Ev 3',
+    bgColor: Colors.fluroAmber,
+    textColor: 'black',
+  },
+  {
+    id: '7',
+    startTime: setHours(startOfToday(), 20),
+    endTime: setHours(startOfToday(), 22),
+    title: 'UA Ev 4',
+    bgColor: Colors.teal,
+    textColor: 'white',
+  },
+  {
+    id: '8',
+    startTime: setHours(startOfToday(), 20),
+    endTime: setHours(startOfToday(), 22),
+    title: 'UA Ev 5',
+    bgColor: Colors.greyShadow,
+    textColor: 'white',
   },
 ];
 

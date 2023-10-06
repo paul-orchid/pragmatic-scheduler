@@ -26,7 +26,7 @@ export type CalEvent = {
   title: string;
   startTime: Date;
   endTime: Date;
-  resourceId: string;
+  resourceId?: string;
   bgColor?: string;
   textColor?: string;
 };
@@ -36,4 +36,5 @@ export type Config = {
   rowMinHeight: number;
   divisionMinWidth: number;
   eventMinSeconds: number;
+  unAssignedRows: number;
 };

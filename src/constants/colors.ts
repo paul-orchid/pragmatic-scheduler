@@ -5,4 +5,6 @@ export const Colors = {
   gold: '#B68C4B',
   primaryDark: '#0E1622',
   primaryMain: '#486581',
+  greyShadow: '#E0E0E0',
+  lightGrey: '#F9F9F9',
 };

@@ -14,10 +14,8 @@ import { divisionDetails, events as rawEvents, resources } from './data/schedule
 function App() {
   const [activeDate, setActiveDate] = useState(startOfToday());
   const [events, setEvents] = useState(rawEvents);
-  console.log('events: ', events);
 
   const handleEventChange = (event: CalEvent) => {
-    console.log('dashboard event changed', event);
     setEvents((prevEvents) => {
       const index = prevEvents.findIndex((e) => e.id === event.id);
       const newEvents = [...prevEvents];
@@ -30,7 +28,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Box mb={2}>
-          <Typography variant="h3">Pragmatic Scheduler Demo</Typography>
+          <Typography variant="h5" textAlign="center">
+            Pragmatic Scheduler Demo
+          </Typography>
         </Box>
         <Box mb={2} display="flex" justifyContent="center">
           <SchedulerDateControls activeDate={activeDate} setActiveDate={setActiveDate} />

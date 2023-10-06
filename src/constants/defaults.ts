@@ -5,6 +5,7 @@ export const defaultConfig: Config = {
   rowMinHeight: 70,
   divisionMinWidth: 65,
   eventMinSeconds: 30 * 60, // 30 minutes
+  unAssignedRows: 2,
 };
 
 export const defaultDivisionDetails: DivisionDetail[] = [

@@ -1,11 +1,13 @@
-import React, { SyntheticEvent, useContext, useEffect, useState } from 'react';
+import React, { SyntheticEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { Resizable, ResizeCallbackData } from 'react-resizable';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import 'react-resizable/css/styles.css';
-import { Box, Typography, styled, useTheme } from '@mui/material';
+import { Box, Typography, TypographyProps, styled, useTheme } from '@mui/material';
 import { CalEvent } from '../types';
 import { useCalcEventPosition } from '../hooks/useCalcEventPosition';
 import { SchedulerContext } from './Scheduler';
+import { ResourceRowContext } from './ResourceRow';
+import { format } from 'date-fns';
 
 const Container = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -17,9 +19,34 @@ const Container = styled(Box)(({ theme }) => ({
   textOverflow: 'ellipsis',
 }));
 
+const InnerText = styled((props: TypographyProps) => <Typography variant="caption" noWrap {...props} />)(() => ({
+  display: 'block',
+}));
+
+const useDraggabbleBounds = () => {
+  const { index } = useContext(ResourceRowContext);
+  const {
+    resources,
+    config: { rowMinHeight },
+  } = useContext(SchedulerContext);
+  const bounds = React.useMemo(() => {
+    return {
+      top: -1 * rowMinHeight * index,
+      bottom: (resources.length - (index + 1)) * rowMinHeight,
+    };
+  }, [rowMinHeight, index, resources.length]);
+  return bounds;
+};
+
 export const EventTile = ({ event: startEvent, ...otherProps }: { event: CalEvent }) => {
   const theme = useTheme();
-  const { onEventChange } = useContext(SchedulerContext);
+  const {
+    onEventChange,
+    resources,
+    config: { rowMinHeight },
+  } = useContext(SchedulerContext);
+  const { index } = useContext(ResourceRowContext);
+  const bounds = useDraggabbleBounds();
   const [event, setEvent] = useState(startEvent);
   const [key, setKey] = useState(0);
 
@@ -62,41 +89,58 @@ export const EventTile = ({ event: startEvent, ...otherProps }: { event: CalEven
     });
   };
 
-  const handleDragStop: DraggableEventHandler = (e, data) => {
-    const msAdjustment = (data.lastX / secondsToWidthConversion) * 1000;
-    const newStart = new Date(event.startTime.getTime() + msAdjustment);
-    const newEnd = new Date(event.endTime.getTime() + msAdjustment);
-    setEvent({ ...event, startTime: newStart, endTime: newEnd });
-  };
+  // const handleDragStart: DraggableEventHandler = useCallback(() => {
+  //   setIsDragging(true);
+  // }, []);
 
-  const handleResizeStop = (e: SyntheticEvent, { size, handle }: ResizeCallbackData) => {
-    const newWidth = size.width + parseInt(theme.spacing(4));
-    const currentTimeDifference = event.endTime.getTime() - event.startTime.getTime();
-    const currentWidth = (currentTimeDifference / 1000) * secondsToWidthConversion;
-    const msAdjustment = ((newWidth - currentWidth) / secondsToWidthConversion) * 1000;
-
-    if (handle === 'w') {
-      // if resizing from the left, we need to adjust the start time
-      const newStart = new Date(event.startTime.getTime() - msAdjustment);
-      setEvent({ ...event, startTime: newStart });
-    } else {
-      // if resizing from the right, we need to adjust the end time
+  const handleDragStop: DraggableEventHandler = useCallback(
+    (e, data) => {
+      const msAdjustment = (data.lastX / secondsToWidthConversion) * 1000;
+      const newStart = new Date(event.startTime.getTime() + msAdjustment);
       const newEnd = new Date(event.endTime.getTime() + msAdjustment);
-      setEvent({ ...event, endTime: newEnd });
-    }
-  };
+      let newResourceId = event.resourceId;
+      if (data.lastY) {
+        // if the event was dragged vertically, we need to adjust the resource id
+        const indexToMove = Math.round(data.lastY / rowMinHeight);
+        newResourceId = resources[index + indexToMove].id;
+      }
+      setEvent({ ...event, resourceId: newResourceId, startTime: newStart, endTime: newEnd });
+      // setIsDragging(false);
+    },
+    [event, index, resources, rowMinHeight, secondsToWidthConversion],
+  );
+
+  const handleResizeStop = useCallback(
+    (e: SyntheticEvent, { size, handle }: ResizeCallbackData) => {
+      const newWidth = size.width + parseInt(theme.spacing(4));
+      const currentTimeDifference = event.endTime.getTime() - event.startTime.getTime();
+      const currentWidth = (currentTimeDifference / 1000) * secondsToWidthConversion;
+      const msAdjustment = ((newWidth - currentWidth) / secondsToWidthConversion) * 1000;
+
+      if (handle === 'w') {
+        // if resizing from the left, we need to adjust the start time
+        const newStart = new Date(event.startTime.getTime() - msAdjustment);
+        setEvent({ ...event, startTime: newStart });
+      } else {
+        // if resizing from the right, we need to adjust the end time
+        const newEnd = new Date(event.endTime.getTime() + msAdjustment);
+        setEvent({ ...event, endTime: newEnd });
+      }
+    },
+    [event, secondsToWidthConversion, theme],
+  );
 
   return (
     <Draggable
       nodeRef={nodeRef}
-      axis="x"
+      axis="both"
       handle=".handle"
-      grid={[minWidth, 0]}
+      grid={[minWidth, rowMinHeight]}
       scale={1}
       // onStart={handleDragStart}
-      // onDrag={handleDrag}
       onStop={handleDragStop}
       key={key}
+      bounds={bounds}
     >
       <Resizable
         width={width}
@@ -113,15 +157,13 @@ export const EventTile = ({ event: startEvent, ...otherProps }: { event: CalEven
           bgcolor={event.bgColor || 'primary.main'}
           {...otherProps}
         >
-          <Box className="handle" flex={1} sx={{ cursor: 'move' }}>
-            <Typography
-              variant="caption"
-              textOverflow="ellipsis"
-              overflow="hidden"
-              color={event.textColor || 'text.primary'}
-            >
+          <Box className="handle" flex={1} sx={{ cursor: 'move', overflow: 'hidden' }}>
+            <InnerText fontWeight="bold" color={event.textColor || 'text.primary'}>
               {event.title}
-            </Typography>
+            </InnerText>
+            <InnerText color={event.textColor || 'text.primary'}>
+              {`${format(event.startTime, 'HHmm')}-${format(event.endTime, 'HHmm')}`}
+            </InnerText>
           </Box>
         </Container>
       </Resizable>

@@ -1,10 +1,17 @@
-import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
+import React, { useContext, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { SchedulerContext } from './Scheduler';
-import { Box, styled } from '@mui/material';
-import { CalEvent } from '../types';
+import { styled } from '@mui/material';
+import { CalEvent, Resource } from '../types';
 import { Cell } from '../layout/Cell';
 import { EventTile } from './EventTile';
 
+const Container = styled('div')(({ minHeight }: { minHeight: number }) => ({
+  position: 'relative',
+  flex: 1,
+  display: 'flex',
+  zIndex: 2,
+  minHeight: minHeight,
+}));
 const EventsContainer = styled('div')(() => ({
   position: 'relative',
   flex: 1,
@@ -13,12 +20,15 @@ const EventsContainer = styled('div')(() => ({
 
 export const ResourceRowContext = React.createContext<{
   containerWidth: number;
+  index: number;
 }>({
+  index: 0,
   containerWidth: 0,
 });
 
-export const ResourceRow = ({ events }: { events: CalEvent[] }) => {
-  const { days, config } = useContext(SchedulerContext);
+export const ResourceRow = ({ resource, index }: { resource?: Resource; index: number }) => {
+  const { events: allEvents, days, config } = useContext(SchedulerContext);
+  const events = useMemo(() => allEvents.filter((e) => e.resourceId === resource?.id), [allEvents, resource?.id]);
   const ref = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
 
@@ -26,15 +36,23 @@ export const ResourceRow = ({ events }: { events: CalEvent[] }) => {
     setContainerWidth(ref.current?.offsetWidth || 0);
   }, []);
 
+  const handleMouseEnter = () => {
+    console.log('mouse enter');
+  };
+
   return (
-    <Box flex={1} display="flex" minHeight={config.rowMinHeight}>
+    <Container minHeight={config.rowMinHeight} onMouseEnter={handleMouseEnter}>
       {/* Add columns for each day */}
       <EventsContainer ref={ref}>
-        <ResourceRowContext.Provider value={{ containerWidth }}>
+        <ResourceRowContext.Provider value={{ containerWidth, index }}>
           {days.map((day, index) => (
-            <Cell key={index} classes={['no-padding']}>
-              {day.divisions.map((division, index) => (
-                <Cell key={index} classes={['light-border']} minWidth={config.divisionMinWidth}></Cell>
+            <Cell key={index} classes={resource ? ['no-padding'] : ['no-padding', 'no-border']}>
+              {day.divisions.map((_division, index) => (
+                <Cell
+                  key={index}
+                  classes={resource ? ['light-border'] : ['no-border']}
+                  minWidth={config.divisionMinWidth}
+                ></Cell>
               ))}
             </Cell>
           ))}
@@ -43,6 +61,6 @@ export const ResourceRow = ({ events }: { events: CalEvent[] }) => {
           ))}
         </ResourceRowContext.Provider>
       </EventsContainer>
-    </Box>
+    </Container>
   );
 };

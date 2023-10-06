@@ -1,11 +1,10 @@
 import React, { useMemo } from 'react';
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail } from '../types';
 import { addDays, endOfDay } from 'date-fns';
 import { TimelineView } from '../views/TimelineView';
 import { defaultConfig, defaultDivisionDetails } from '../constants/defaults';
 import { useDateToDivisions } from '../hooks/useDateToDivisions';
-import { BorderedBox } from '../layout/BorderedBox';
 declare module '@mui/material/styles' {
   interface TypographyVariants {
     tableHeader: React.CSSProperties;
@@ -40,7 +39,8 @@ export const SchedulerContext = React.createContext<{
   calendarBounds: { start: new Date(), end: new Date(), range: 0, totalDivisions: 0 },
 });
 
-const Container = styled(BorderedBox)(() => ({
+const Container = styled(Box)(() => ({
+  display: 'flex',
   flexDirection: 'column',
 }));
 

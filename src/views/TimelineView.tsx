@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import { SchedulerContext } from '../components/Scheduler';
 import { HeaderRow } from '../components/HeaderRow';
 import { Box, Typography } from '@mui/material';
-import { BorderedBox } from '../layout/BorderedBox';
+import { BorderedBox, BoxShadow } from '../layout/BorderedBox';
 import { Cell } from '../layout/Cell';
 import { Colors } from '../constants/colors';
 import GridLayout from 'react-grid-layout';
@@ -57,7 +57,7 @@ export const TimelineView = () => {
     [calcEventPosition],
   );
 
-  const handleDragStop: GridLayout.ItemCallback = useCallback(
+  const handleDragResizeStop: GridLayout.ItemCallback = useCallback(
     (
       _layout: GridLayout.Layout[],
       _oldItem: GridLayout.Layout,
@@ -102,7 +102,7 @@ export const TimelineView = () => {
           ))}
         </Box>
         {/* right side column that scrolls */}
-        <Box position="relative" flex={1} overflow="auto" ref={ref}>
+        <BoxShadow position="relative" flex={1} overflow="auto" ref={ref}>
           <HeaderRow onDragStart={handleUnassignedDragStart} />
           <GridLayout
             className="layout"
@@ -116,7 +116,8 @@ export const TimelineView = () => {
             isDroppable={true}
             onDrop={handleDrop}
             droppingItem={droppingItem}
-            onDragStop={handleDragStop}
+            onDragStop={handleDragResizeStop}
+            onResizeStop={handleDragResizeStop}
           >
             {/* <div key="a" data-grid={{ x: 0, y: 2, w: 4, h: 1, static: true }}>
               <div style={{ height: '100%', background: 'yellow' }}>Static1 x: 0 y: 2</div>
@@ -167,7 +168,7 @@ export const TimelineView = () => {
                 );
               })}
           </GridLayout>
-        </Box>
+        </BoxShadow>
       </Box>
     </Box>
   );

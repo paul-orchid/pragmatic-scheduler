@@ -3,9 +3,10 @@ import { Config, DivisionDetail } from '../types';
 export const defaultConfig: Config = {
   resourceColumnWidth: 220,
   rowMinHeight: 70,
-  divisionMinWidth: 65,
+  divisionMinWidth: 160,
   eventMinSeconds: 30 * 60, // 30 minutes
   unAssignedRows: 2,
+  divisionParts: 4,
 };
 
 export const defaultDivisionDetails: DivisionDetail[] = [

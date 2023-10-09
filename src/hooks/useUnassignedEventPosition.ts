@@ -2,22 +2,31 @@ import { useCallback, useContext } from 'react';
 import { CalEvent } from '../types';
 import { SchedulerContext } from '../components/Scheduler';
 import { addDays } from 'date-fns';
-import GridLayout from 'react-grid-layout';
 
-export const useCalcEventPosition = () => {
+export const useUnassignedEventPosition = () => {
   const {
-    resources,
     days,
-    config: { divisionParts },
+    calendarBounds: { totalDivisions },
+    config: { eventMinSeconds, rowMinHeight },
   } = useContext(SchedulerContext);
 
   return useCallback(
-    (event: CalEvent): GridLayout.Layout => {
-      const resourceIndex = resources.findIndex((resource) => resource.id === event.resourceId);
-
+    (containerWidth: number, event: CalEvent) => {
       let divisionCount = 0;
-      let x = 0;
-      let w = 0;
+      let left = 0;
+      let width = 0;
+
+      const totalTimeDisplayed = days.reduce((total, day) => {
+        return (
+          total +
+          day.divisions.reduce(
+            (total, division) => total + division.endTime.getTime() - division.startTime.getTime(),
+            0,
+          )
+        );
+      }, 0);
+      const secondsToWidthConversion = (containerWidth / totalTimeDisplayed) * 1000;
+      const minWidth = eventMinSeconds * secondsToWidthConversion;
 
       outerLoop: for (const day of days) {
         if (
@@ -29,7 +38,7 @@ export const useCalcEventPosition = () => {
             const divisionRange = division.endTime.getTime() - division.startTime.getTime();
             if (division.startTime <= event.startTime && division.endTime >= event.startTime) {
               const fractionOfDivision = (event.startTime.getTime() - division.startTime.getTime()) / divisionRange;
-              x = divisionCount + fractionOfDivision * divisionParts;
+              left = ((divisionCount + fractionOfDivision) / totalDivisions) * containerWidth;
             }
             if (
               (division.startTime <= event.endTime && division.endTime >= event.endTime) ||
@@ -39,19 +48,31 @@ export const useCalcEventPosition = () => {
                 (event.endTime.getTime() - division.startTime.getTime()) / divisionRange,
                 0,
               );
-              w = divisionCount + fractionOfDivision * divisionParts - x;
+              // right = (1 - (divisionCount + fractionOfDivision) / totalDivisions) * containerWidth;
+              width =
+                containerWidth - (1 - (divisionCount + fractionOfDivision) / totalDivisions) * containerWidth - left;
             }
-            if (x && w) {
+            if (left && width) {
               break outerLoop;
             }
-            divisionCount = divisionCount + divisionParts;
+            divisionCount++;
           }
         } else {
-          divisionCount += day.divisions.length * divisionParts;
+          divisionCount += day.divisions.length;
         }
       }
-      return { i: event.id, x: x, y: resourceIndex, w: w, h: 1, maxH: 1 };
+
+      const top = 2;
+      const height = rowMinHeight;
+      return {
+        minWidth,
+        secondsToWidthConversion,
+        left,
+        width,
+        top,
+        height,
+      };
     },
-    [days, divisionParts, resources],
+    [days, eventMinSeconds, rowMinHeight, totalDivisions],
   );
 };

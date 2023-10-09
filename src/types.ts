@@ -37,4 +37,5 @@ export type Config = {
   divisionMinWidth: number;
   eventMinSeconds: number;
   unAssignedRows: number;
+  divisionParts: number;
 };

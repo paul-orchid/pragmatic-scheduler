@@ -1,22 +1,21 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useCallback, useContext, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { SchedulerContext } from './Scheduler';
-import { Box, Typography, useTheme } from '@mui/material';
-import { ScheduleDay } from '../types';
+import { Box, Typography, styled } from '@mui/material';
+import { CalEvent, ScheduleDay } from '../types';
 import { format, isSameDay } from 'date-fns';
 import { BorderedBox } from '../layout/BorderedBox';
-import { ResourceRow } from './ResourceRow';
+import { useUnassignedEventPosition } from '../hooks/useUnassignedEventPosition';
+import { EventTile } from './EventTile';
 
-export const HeaderRow = () => {
+export const HeaderRow = ({ onDragStart }: { onDragStart: (event: CalEvent) => void }) => {
   const {
     days,
-    config: { unAssignedRows, rowMinHeight },
+    config: { rowMinHeight },
   } = useContext(SchedulerContext);
 
   return (
     <>
-      <Box position="relative" minHeight={unAssignedRows * rowMinHeight}>
-        <ResourceRow index={-1 * (unAssignedRows + 1)} />
-      </Box>
+      <UnAssignedEvents onDragStart={onDragStart} />
       <Box flex={1} display="flex" minHeight={rowMinHeight}>
         {/* Add columns for each day */}
         {days.map((day, index) => (
@@ -28,13 +27,8 @@ export const HeaderRow = () => {
 };
 
 const useMinWidthPlusSpacing = () => {
-  const theme = useTheme();
   const { config } = useContext(SchedulerContext);
-  // account for padding and border: (spacing x 8) + 1px + 1px
-  const minWidth = useMemo(
-    () => config.divisionMinWidth + parseInt(theme.spacing(8)) + 2,
-    [config.divisionMinWidth, theme],
-  );
+  const minWidth = useMemo(() => config.divisionMinWidth, [config.divisionMinWidth]);
   return minWidth;
 };
 
@@ -58,5 +52,64 @@ const HeaderCell = ({ day, ...other }: { day: ScheduleDay }) => {
         ))}
       </Box>
     </BorderedBox>
+  );
+};
+
+const Container = styled('div')(() => ({
+  position: 'absolute',
+  userSelect: 'none',
+}));
+
+const UnAssignedEvents = ({ onDragStart }: { onDragStart: (event: CalEvent) => void }) => {
+  const {
+    events,
+    config: { unAssignedRows, rowMinHeight, divisionMinWidth },
+    calendarBounds: { totalDivisions },
+  } = useContext(SchedulerContext);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const calcEventPosition = useUnassignedEventPosition();
+  const unAssignedEvents = useMemo(() => events.filter((e) => !e.resourceId), [events]);
+
+  useLayoutEffect(() => {
+    setContainerWidth(ref.current?.offsetWidth || 0);
+  }, []);
+
+  const handleDragStart = useCallback(
+    (e: React.DragEvent, event: CalEvent) => {
+      onDragStart(event);
+      // this is a hack for firefox
+      // Firefox requires some kind of initialization
+      // which we can do by adding this attribute
+      // @see https://bugzilla.mozilla.org/show_bug.cgi?id=568313
+
+      e.dataTransfer.setData('text/plain', '');
+    },
+    [onDragStart],
+  );
+
+  return (
+    <Box
+      position="relative"
+      width={totalDivisions * divisionMinWidth}
+      overflow="auto"
+      height={unAssignedRows * rowMinHeight}
+      ref={ref}
+    >
+      {unAssignedEvents.map((event) => {
+        const { top, height, left, width } = calcEventPosition(containerWidth, event);
+        return (
+          <Container
+            key={event.id}
+            // className="droppable-element"
+            draggable={true}
+            style={{ top, height, left, width }}
+            onDragStart={(e) => handleDragStart(e, event)}
+          >
+            <EventTile event={event} />
+          </Container>
+        );
+      })}
+    </Box>
   );
 };

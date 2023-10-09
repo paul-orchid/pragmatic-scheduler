@@ -4,12 +4,15 @@ import './App.css';
 import { Box, Typography } from '@mui/material';
 import { startOfToday } from 'date-fns';
 import { Scheduler } from './components/Scheduler';
+
 import { CalEvent } from './types';
 import { SchedulerDateControls } from './components/SchedulerDateControls';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { theme } from './layout/theme';
 import { divisionDetails, events as rawEvents, resources } from './data/scheduler';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 function App() {
   const [activeDate, setActiveDate] = useState(startOfToday());

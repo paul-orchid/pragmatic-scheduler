@@ -36,12 +36,12 @@ export const ResourceRow = ({ resource, index }: { resource?: Resource; index: n
     setContainerWidth(ref.current?.offsetWidth || 0);
   }, []);
 
-  const handleMouseEnter = () => {
-    console.log('mouse enter');
-  };
+  // const handleMouseEnter = () => {
+  //   console.log('mouse enter');
+  // };
 
   return (
-    <Container minHeight={config.rowMinHeight} onMouseEnter={handleMouseEnter}>
+    <Container minHeight={config.rowMinHeight}>
       {/* Add columns for each day */}
       <EventsContainer ref={ref}>
         <ResourceRowContext.Provider value={{ containerWidth, index }}>
@@ -63,4 +63,27 @@ export const ResourceRow = ({ resource, index }: { resource?: Resource; index: n
       </EventsContainer>
     </Container>
   );
+  // return (
+  //   <Container minHeight={config.rowMinHeight} onMouseEnter={handleMouseEnter}>
+  //     {/* Add columns for each day */}
+  //     <EventsContainer ref={ref}>
+  //       <ResourceRowContext.Provider value={{ containerWidth, index }}>
+  //         {days.map((day, index) => (
+  //           <Cell key={index} classes={resource ? ['no-padding'] : ['no-padding', 'no-border']}>
+  //             {day.divisions.map((_division, index) => (
+  //               <Cell
+  //                 key={index}
+  //                 classes={resource ? ['light-border'] : ['no-border']}
+  //                 minWidth={config.divisionMinWidth}
+  //               ></Cell>
+  //             ))}
+  //           </Cell>
+  //         ))}
+  //         {events.map((event) => (
+  //           <EventTile key={event.id} event={event} />
+  //         ))}
+  //       </ResourceRowContext.Provider>
+  //     </EventsContainer>
+  //   </Container>
+  // );
 };

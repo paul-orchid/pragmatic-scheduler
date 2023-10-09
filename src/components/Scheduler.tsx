@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react';
+
 import { Box, styled } from '@mui/material';
 import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail } from '../types';
 import { addDays, endOfDay } from 'date-fns';
-import { TimelineView } from '../views/TimelineView';
 import { defaultConfig, defaultDivisionDetails } from '../constants/defaults';
 import { useDateToDivisions } from '../hooks/useDateToDivisions';
+import { TimelineView } from '../views/TimelineView';
+
 declare module '@mui/material/styles' {
   interface TypographyVariants {
     tableHeader: React.CSSProperties;
@@ -59,8 +61,6 @@ export const Scheduler = ({
   config?: Config;
   onEventChange?: (event: CalEvent) => void;
 }) => {
-  // TODO install react-grid-layout and use it to handle the layout, and drag/drop/resize of the scheduler
-
   const { dateToDivisions } = useDateToDivisions();
   const firstDay = useMemo(() => addDays(activeDate, -1), [activeDate]);
   const lastDay = useMemo(() => endOfDay(addDays(activeDate, 1)), [activeDate]);

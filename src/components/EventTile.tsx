@@ -23,7 +23,7 @@ export const EventTile = React.forwardRef(({ event, children, ...otherProps }: {
           {event.title}
         </InnerText>
         <InnerText color={event.textColor || 'text.primary'}>
-          {`${format(event.startTime, 'HHmm')}-${format(event.endTime, 'HHmm')}`}
+          {`${format(event.startTime, 'HHmm')}-${format(event.endTime, 'HHmm')}`} ({event.resourceId})
         </InnerText>
       </Box>
       {children}

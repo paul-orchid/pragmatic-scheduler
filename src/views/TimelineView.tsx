@@ -25,6 +25,7 @@ export const TimelineView = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const calcEventPosition = useCalcEventPosition();
   const layoutToCalEvent = useLayoutToCalEvent();
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
   const gridLayouts = useCalcGridPositions();
   const calcResourceRows = useCalcResourceRows();
 
@@ -57,10 +58,16 @@ export const TimelineView = () => {
       if (dragCalEvent && layoutItem) {
         const updatedEvent = layoutToCalEvent(layoutItem);
         onEventChange?.(updatedEvent);
+        setIsDraggingOver(false);
       }
     },
     [dragCalEvent, layoutToCalEvent, onEventChange],
   );
+
+  const handleDropDragOver = useCallback(() => {
+    setIsDraggingOver(true);
+    return undefined;
+  }, [setIsDraggingOver]);
 
   const handleUnassignedDragStart = useCallback(
     (event: CalEvent) => {
@@ -82,6 +89,8 @@ export const TimelineView = () => {
     ) => {
       const updatedEvent = layoutToCalEvent(newItem);
       onEventChange?.(updatedEvent);
+      // be sure to unset this so that the handleLayoutChange updates the layout
+      setIsDraggingOver(false);
       setTimeout(() => {
         // note this is required as the handleLayoutChange is not always triggered
         // see: https://github.com/react-grid-layout/react-grid-layout/issues/1606
@@ -90,6 +99,17 @@ export const TimelineView = () => {
       });
     },
     [layoutToCalEvent, onEventChange, updateLayout],
+  );
+
+  const handleLayoutChange = useCallback(
+    (layout: GridLayout.Layout[]) => {
+      // note we have to check if we are dragging over as the handleLayoutChange can remove the droppingItem
+      // which causes the handleDrop be called with an undefined layoutItem, and the "pink box" is not shown
+      if (!isDraggingOver) {
+        updateLayout(layout);
+      }
+    },
+    [isDraggingOver, updateLayout],
   );
 
   return (
@@ -138,13 +158,12 @@ export const TimelineView = () => {
             isBounded={true}
             isDroppable={true}
             onDrop={handleDrop}
+            onDropDragOver={handleDropDragOver}
             droppingItem={droppingItem}
             onDragStop={handleDragResizeStop}
             onResizeStop={handleDragResizeStop}
             layout={layouts}
-            // using the onLayoutChange causes an issue with the handleDrop not working
-            // as we are updaing the layout in the dragstop and resizestop we don't need this
-            // onLayoutChange={handleLayoutChange}
+            onLayoutChange={handleLayoutChange}
           >
             {gridLayouts.map((layout) => {
               return (

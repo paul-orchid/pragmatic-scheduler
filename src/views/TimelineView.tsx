@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { SchedulerContext } from '../components/Scheduler';
-import { HeaderRow } from '../components/HeaderRow';
+import { HeaderRow, UnAssignedEvents } from '../components/HeaderRow';
 import { Box, Typography } from '@mui/material';
 import { BorderedBox, BoxShadow } from '../layout/BorderedBox';
 import { Cell } from '../layout/Cell';
@@ -17,6 +17,7 @@ export const TimelineView = () => {
   const {
     resources,
     events,
+    days,
     config,
     activeDate,
     calendarBounds: { totalDivisions },
@@ -43,11 +44,12 @@ export const TimelineView = () => {
   );
 
   useEffect(() => {
+    // scroll to the current date (there is 1 day in the past)
     ref.current?.scrollTo({
-      left: ref.current.scrollWidth * 0.3,
+      left: ref.current.scrollWidth * (1 / (config.daysToDisplay + 1)),
       behavior: 'smooth',
     });
-  }, [activeDate]);
+  }, [activeDate, config.daysToDisplay]);
 
   const cols = useMemo(() => {
     return totalDivisions * config.divisionParts;
@@ -115,15 +117,17 @@ export const TimelineView = () => {
   return (
     <Box>
       {/* top row */}
-      <Box display="flex">
-        <Box px={4} maxWidth={config.resourceColumnWidth} minWidth={config.resourceColumnWidth} />
-        <BorderedBox px={3} py={2} sx={{ background: Colors.lightGrey }}>
-          <Typography variant="tableHeader">UNASSIGNED</Typography>
-        </BorderedBox>
-      </Box>
+      {config.unAssignedRows && (
+        <Box display="flex">
+          <Box px={4} maxWidth={config.resourceColumnWidth} minWidth={config.resourceColumnWidth} />
+          <BorderedBox px={3} py={2} sx={{ background: Colors.lightGrey }}>
+            <Typography variant="tableHeader">UNASSIGNED</Typography>
+          </BorderedBox>
+        </Box>
+      )}
       <Box display="flex">
         {/* left side column that does not scroll */}
-        <Box marginTop={`${config.rowMinHeight * 2}px`}>
+        <Box marginTop={config.unAssignedRows ? `${config.rowMinHeight * 2}px` : 0}>
           <BorderedBox
             px={4}
             alignItems="center"
@@ -146,7 +150,8 @@ export const TimelineView = () => {
         </Box>
         {/* right side column that scrolls */}
         <BoxShadow position="relative" flex={1} overflow="auto" ref={ref}>
-          <HeaderRow onDragStart={handleUnassignedDragStart} />
+          {config.unAssignedRows && <UnAssignedEvents onDragStart={handleUnassignedDragStart} />}
+          <HeaderRow days={days} />
           <GridLayout
             className="layout"
             margin={[0, 0]}
@@ -154,7 +159,7 @@ export const TimelineView = () => {
             allowOverlap={true}
             cols={cols}
             rowHeight={config.rowMinHeight}
-            width={(cols * config.divisionMinWidth) / config.divisionParts}
+            width={(cols * config.divisionWidth) / config.divisionParts}
             isBounded={true}
             isDroppable={true}
             onDrop={handleDrop}
@@ -171,8 +176,8 @@ export const TimelineView = () => {
                   <Cell
                     classes={['no-padding', 'light-border']}
                     height={config.rowMinHeight * layout.h - 2}
-                    maxWidth={config.divisionMinWidth}
-                    minWidth={config.divisionMinWidth}
+                    maxWidth={config.divisionWidth}
+                    minWidth={config.divisionWidth}
                   ></Cell>
                 </div>
               );

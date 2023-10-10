@@ -21,7 +21,7 @@ export const useCalcGridPositions = () => {
               i: `cell-${index}-${dayIndex}-${divIndex}`,
               x: x,
               y: y,
-              w: 4,
+              w: config.divisionParts,
               h: rows,
               static: true,
             };

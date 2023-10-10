@@ -43,8 +43,6 @@ export const useCalcEventPosition = () => {
                 0,
               );
               w = divisionCount + fractionOfDivision * divisionParts - x;
-            }
-            if (x && w) {
               break outerLoop;
             }
             divisionCount = divisionCount + divisionParts;

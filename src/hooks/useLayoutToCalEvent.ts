@@ -46,8 +46,10 @@ export const useLayoutToCalEvent = () => {
               const fractionOfDivision = (layout.x % divisionParts) / divisionParts;
               startTime = new Date(division.startTime.getTime() + fractionOfDivision * divisionRange);
             }
-            if (!endTime && endColumn < divisionCount + divisionParts) {
-              const fractionOfDivision = (endColumn % divisionParts) / divisionParts;
+            if (!endTime && endColumn <= divisionCount + divisionParts) {
+              const remainder = endColumn % divisionParts;
+              // if there is no remainder, then is takes up the full division
+              const fractionOfDivision = remainder === 0 ? 1 : remainder / divisionParts;
               endTime = new Date(division.startTime.getTime() + fractionOfDivision * divisionRange);
             }
             if (startTime && endTime) {

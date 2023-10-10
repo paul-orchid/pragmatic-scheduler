@@ -7,44 +7,44 @@ import { BorderedBox } from '../layout/BorderedBox';
 import { useUnassignedEventPosition } from '../hooks/useUnassignedEventPosition';
 import { EventTile } from './EventTile';
 
-export const HeaderRow = ({ onDragStart }: { onDragStart: (event: CalEvent) => void }) => {
+export const HeaderRow = ({ days }: { days: ScheduleDay[] }) => {
   const {
-    days,
+    HeaderRow: HeaderRowOverride,
     config: { rowMinHeight },
   } = useContext(SchedulerContext);
 
   return (
-    <>
-      <UnAssignedEvents onDragStart={onDragStart} />
-      <Box flex={1} display="flex" minHeight={rowMinHeight}>
-        {/* Add columns for each day */}
-        {days.map((day, index) => (
-          <HeaderCell key={index} day={day} />
-        ))}
-      </Box>
-    </>
+    <Box flex={1} display="flex" minHeight={rowMinHeight} maxHeight={rowMinHeight}>
+      {/* Add columns for each day */}
+      {HeaderRowOverride ? (
+        <HeaderRowOverride days={days} />
+      ) : (
+        days.map((day, index) => <HeaderCell key={index} day={day} />)
+      )}
+    </Box>
   );
 };
 
-const useMinWidthPlusSpacing = () => {
+const useWidthPlusSpacing = () => {
   const { config } = useContext(SchedulerContext);
-  const minWidth = useMemo(() => config.divisionMinWidth, [config.divisionMinWidth]);
-  return minWidth;
+  const width = useMemo(() => config.divisionWidth, [config.divisionWidth]);
+  return width;
 };
 
-const HeaderCell = ({ day, ...other }: { day: ScheduleDay }) => {
+const HeaderCell = ({ day }: { day: ScheduleDay }) => {
   const { activeDate } = useContext(SchedulerContext);
   const isActive = isSameDay(day.date, activeDate);
-  const minWidth = useMinWidthPlusSpacing();
+  const width = useWidthPlusSpacing();
+  const dayWidth = width * day.divisions.length;
 
   return (
-    <BorderedBox flexDirection="column" {...other}>
+    <BorderedBox flexDirection="column" minWidth={dayWidth} maxWidth={dayWidth} overflow="hidden">
       <Typography variant="tableHeader" color={isActive ? 'secondary.main' : 'text.disabled'} p={0.75}>
         {format(day.date, 'EEE dd/MM/yyyy')}
       </Typography>
       <Box display="flex">
         {day.divisions.map((division, index) => (
-          <Box key={index} display="flex" flexDirection="column" flex={1} minWidth={minWidth}>
+          <Box key={index} display="flex" flexDirection="column" flex={1} minWidth={width} maxWidth={width}>
             <Typography variant="tableHeader" color="text.disabled" p={0.75}>
               {division.name}
             </Typography>
@@ -60,10 +60,10 @@ const Container = styled('div')(() => ({
   userSelect: 'none',
 }));
 
-const UnAssignedEvents = ({ onDragStart }: { onDragStart: (event: CalEvent) => void }) => {
+export const UnAssignedEvents = ({ onDragStart }: { onDragStart: (event: CalEvent) => void }) => {
   const {
     events,
-    config: { unAssignedRows, rowMinHeight, divisionMinWidth },
+    config: { unAssignedRows = 1, rowMinHeight, divisionWidth },
     calendarBounds: { totalDivisions },
   } = useContext(SchedulerContext);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -91,7 +91,7 @@ const UnAssignedEvents = ({ onDragStart }: { onDragStart: (event: CalEvent) => v
   return (
     <Box
       position="relative"
-      width={totalDivisions * divisionMinWidth}
+      width={totalDivisions * divisionWidth}
       overflow="auto"
       height={unAssignedRows * rowMinHeight}
       ref={ref}

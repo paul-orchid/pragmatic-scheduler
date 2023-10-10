@@ -34,8 +34,9 @@ export type CalEvent = {
 export type Config = {
   resourceColumnWidth: number;
   rowMinHeight: number;
-  divisionMinWidth: number;
+  divisionWidth: number;
   eventMinSeconds: number;
-  unAssignedRows: number;
+  unAssignedRows?: number;
   divisionParts: number;
+  daysToDisplay: number;
 };

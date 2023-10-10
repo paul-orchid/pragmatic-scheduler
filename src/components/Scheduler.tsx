@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import { Box, styled } from '@mui/material';
 import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail } from '../types';
-import { addDays, endOfDay } from 'date-fns';
+import { addDays, endOfDay, startOfDay } from 'date-fns';
 import { defaultConfig, defaultDivisionDetails } from '../constants/defaults';
 import { useDateToDivisions } from '../hooks/useDateToDivisions';
 import { TimelineView } from '../views/TimelineView';
@@ -32,6 +32,7 @@ export const SchedulerContext = React.createContext<{
   config: Config;
   calendarBounds: { start: Date; end: Date; range: number; totalDivisions: number };
   onEventChange?: (event: CalEvent) => void;
+  HeaderRow?: React.FC<{ days: ScheduleDay[] }>;
 }>({
   activeDate: new Date(),
   days: [],
@@ -53,6 +54,7 @@ export const Scheduler = ({
   events,
   config = defaultConfig,
   onEventChange,
+  HeaderRow,
 }: {
   activeDate: Date;
   divisionDetails?: DivisionDetail[];
@@ -60,14 +62,20 @@ export const Scheduler = ({
   events: CalEvent[];
   config?: Config;
   onEventChange?: (event: CalEvent) => void;
+  HeaderRow?: React.FC<{ days: ScheduleDay[] }>;
 }) => {
   const { dateToDivisions } = useDateToDivisions();
   const firstDay = useMemo(() => addDays(activeDate, -1), [activeDate]);
-  const lastDay = useMemo(() => endOfDay(addDays(activeDate, 1)), [activeDate]);
-  const days = useMemo(
-    () => [firstDay, activeDate, lastDay].map((date) => dateToDivisions(date, divisionDetails)),
-    [activeDate, dateToDivisions, divisionDetails, firstDay, lastDay],
-  );
+  const lastDay = useMemo(() => endOfDay(addDays(firstDay, config.daysToDisplay)), [firstDay, config.daysToDisplay]);
+  const days = useMemo(() => {
+    const date = new Date(firstDay);
+    const days: ScheduleDay[] = [];
+    while (date <= lastDay) {
+      days.push(dateToDivisions(date, divisionDetails));
+      date.setDate(date.getDate() + 1);
+    }
+    return days;
+  }, [dateToDivisions, divisionDetails, firstDay, lastDay]);
 
   const range = lastDay.getTime() - firstDay.getTime();
   const totalDivisions = days.reduce((acc, day) => acc + day.divisions.length, 0);
@@ -99,6 +107,7 @@ export const Scheduler = ({
         config: config,
         calendarBounds: { start: firstDay, end: lastDay, range: range, totalDivisions: totalDivisions },
         onEventChange: onEventChange,
+        HeaderRow: HeaderRow,
       }}
     >
       <Container>

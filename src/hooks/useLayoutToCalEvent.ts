@@ -1,7 +1,8 @@
 import { useCallback, useContext } from 'react';
-import { CalEvent } from '../types';
+import { CalEvent, Resource } from '../types';
 import { SchedulerContext } from '../components/Scheduler';
 import GridLayout from 'react-grid-layout';
+import { useCalcResourceRows } from './useCalcResourceRows';
 
 export const useLayoutToCalEvent = () => {
   const {
@@ -10,14 +11,25 @@ export const useLayoutToCalEvent = () => {
     days,
     config: { divisionParts },
   } = useContext(SchedulerContext);
+  const calcResourceRows = useCalcResourceRows();
 
   return useCallback(
     (layout: GridLayout.Layout): CalEvent => {
-      const event = events.find((event) => event.id === layout.i);
+      const event = events.find((event) => event.id === layout?.i);
       if (!event) {
         throw new Error('Event not found');
       }
-      const resource = resources[layout.y];
+      let rowCount = 0;
+      let resource: Resource | undefined = undefined;
+      for (const _resource of resources) {
+        rowCount += calcResourceRows(_resource);
+        if (rowCount > layout.y) {
+          resource = _resource;
+          break;
+        }
+      }
+
+      // const resource = resources[layout.y];
       let startTime: Date | undefined = undefined;
       let endTime: Date | undefined = undefined;
 
@@ -50,11 +62,11 @@ export const useLayoutToCalEvent = () => {
       }
       return {
         ...event,
-        resourceId: resource.id,
+        resourceId: resource?.id,
         startTime: startTime || event.startTime,
         endTime: endTime || event.endTime,
       };
     },
-    [days, divisionParts, events, resources],
+    [calcResourceRows, days, divisionParts, events, resources],
   );
 };

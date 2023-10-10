@@ -2,6 +2,7 @@ import { useCallback, useContext } from 'react';
 import { CalEvent } from '../types';
 import { SchedulerContext } from '../components/Scheduler';
 import { addDays } from 'date-fns';
+import { useOverlappingEvents } from './useOverlappingEvents';
 
 export const useUnassignedEventPosition = () => {
   const {
@@ -10,12 +11,13 @@ export const useUnassignedEventPosition = () => {
     config: { eventMinSeconds, rowMinHeight },
   } = useContext(SchedulerContext);
 
+  const getOverlappingEvents = useOverlappingEvents();
+
   return useCallback(
     (containerWidth: number, event: CalEvent) => {
       let divisionCount = 0;
       let left = 0;
       let width = 0;
-
       const totalTimeDisplayed = days.reduce((total, day) => {
         return (
           total +
@@ -62,7 +64,9 @@ export const useUnassignedEventPosition = () => {
         }
       }
 
-      const top = 2;
+      const overlappingEvents = getOverlappingEvents(event);
+
+      const top = 2 + overlappingEvents.length * (rowMinHeight + 2);
       const height = rowMinHeight;
       return {
         minWidth,
@@ -73,6 +77,6 @@ export const useUnassignedEventPosition = () => {
         height,
       };
     },
-    [days, eventMinSeconds, rowMinHeight, totalDivisions],
+    [days, eventMinSeconds, getOverlappingEvents, rowMinHeight, totalDivisions],
   );
 };

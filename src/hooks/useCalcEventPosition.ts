@@ -3,6 +3,8 @@ import { CalEvent } from '../types';
 import { SchedulerContext } from '../components/Scheduler';
 import { addDays } from 'date-fns';
 import GridLayout from 'react-grid-layout';
+import { useOverlappingEvents } from './useOverlappingEvents';
+import { useCalcResourceRows } from './useCalcResourceRows';
 
 export const useCalcEventPosition = () => {
   const {
@@ -11,10 +13,11 @@ export const useCalcEventPosition = () => {
     config: { divisionParts },
   } = useContext(SchedulerContext);
 
+  const getOverlappingEvents = useOverlappingEvents();
+  const calcResourceRows = useCalcResourceRows();
+
   return useCallback(
     (event: CalEvent): GridLayout.Layout => {
-      const resourceIndex = resources.findIndex((resource) => resource.id === event.resourceId);
-
       let divisionCount = 0;
       let x = 0;
       let w = 0;
@@ -50,8 +53,18 @@ export const useCalcEventPosition = () => {
           divisionCount += day.divisions.length * divisionParts;
         }
       }
-      return { i: event.id, x: x, y: resourceIndex, w: w, h: 1, maxH: 1 };
+      const overlappingEvents = getOverlappingEvents(event);
+
+      // sum up how may rows are use in the previous resources
+      let rowCount = 0;
+      for (const _resource of resources) {
+        if (_resource.id === event.resourceId) {
+          break;
+        }
+        rowCount += calcResourceRows(_resource);
+      }
+      return { i: event.id, x: x, y: rowCount + overlappingEvents.length, w: w, h: 1, maxH: 1 };
     },
-    [days, divisionParts, resources],
+    [calcResourceRows, days, divisionParts, getOverlappingEvents, resources],
   );
 };

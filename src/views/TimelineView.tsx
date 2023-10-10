@@ -8,12 +8,13 @@ import { Colors } from '../constants/colors';
 import GridLayout from 'react-grid-layout';
 import { EventTile } from '../components/EventTile';
 import { useCalcEventPosition } from '../hooks/useCalcEventPosition';
+import { useCalcResourceRows } from '../hooks/useCalcResourceRows';
 import { useLayoutToCalEvent } from '../hooks/useLayoutToCalEvent';
+import { useCalcGridPositions } from '../hooks/useCalcGridPositions';
 import { CalEvent } from '../types';
 
 export const TimelineView = () => {
   const {
-    days,
     resources,
     events,
     config,
@@ -24,8 +25,21 @@ export const TimelineView = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const calcEventPosition = useCalcEventPosition();
   const layoutToCalEvent = useLayoutToCalEvent();
+  const gridLayouts = useCalcGridPositions();
+  const calcResourceRows = useCalcResourceRows();
+
   const [dragCalEvent, setDragCalEvent] = useState<CalEvent | undefined>();
   const [droppingItem, setDroppingItem] = useState<GridLayout.Layout>({ i: 'droppedItem', w: 4, h: 1, x: 0, y: 0 });
+  const [layouts, setLayouts] = useState<GridLayout.Layout[]>(gridLayouts);
+
+  const updateLayout = useCallback(
+    (layout: GridLayout.Layout[]) => {
+      const gridIds = gridLayouts.map((l) => l.i);
+      const eventLayouts = layout.filter((l) => !gridIds.includes(l.i));
+      setLayouts([...eventLayouts, ...gridLayouts]);
+    },
+    [gridLayouts],
+  );
 
   useEffect(() => {
     ref.current?.scrollTo({
@@ -40,7 +54,7 @@ export const TimelineView = () => {
 
   const handleDrop = useCallback(
     (_layout: GridLayout.Layout[], layoutItem: GridLayout.Layout) => {
-      if (dragCalEvent) {
+      if (dragCalEvent && layoutItem) {
         const updatedEvent = layoutToCalEvent(layoutItem);
         onEventChange?.(updatedEvent);
       }
@@ -59,7 +73,7 @@ export const TimelineView = () => {
 
   const handleDragResizeStop: GridLayout.ItemCallback = useCallback(
     (
-      _layout: GridLayout.Layout[],
+      layout: GridLayout.Layout[],
       _oldItem: GridLayout.Layout,
       newItem: GridLayout.Layout,
       // _placeholder: GridLayout.Layout,
@@ -68,8 +82,14 @@ export const TimelineView = () => {
     ) => {
       const updatedEvent = layoutToCalEvent(newItem);
       onEventChange?.(updatedEvent);
+      setTimeout(() => {
+        // note this is required as the handleLayoutChange is not always triggered
+        // see: https://github.com/react-grid-layout/react-grid-layout/issues/1606
+        // the setTimeout is a hack as sometime it ges into a loop depending on how quickly the event is dropped
+        updateLayout(layout);
+      });
     },
-    [layoutToCalEvent, onEventChange],
+    [layoutToCalEvent, onEventChange, updateLayout],
   );
 
   return (
@@ -93,13 +113,16 @@ export const TimelineView = () => {
           >
             <Typography variant="subtitle2">TEAM</Typography>
           </BorderedBox>
-          {resources.map((resource) => (
-            <BorderedBox minHeight={config.rowMinHeight} key={resource.id}>
-              <Cell alignItems="center" maxWidth={config.resourceColumnWidth} minWidth={config.resourceColumnWidth}>
-                <Typography variant="subtitle2">{resource.name}</Typography>
-              </Cell>
-            </BorderedBox>
-          ))}
+          {resources.map((resource) => {
+            const rows = calcResourceRows(resource);
+            return (
+              <BorderedBox minHeight={config.rowMinHeight * rows} key={resource.id}>
+                <Cell alignItems="center" maxWidth={config.resourceColumnWidth} minWidth={config.resourceColumnWidth}>
+                  <Typography variant="subtitle2">{resource.name}</Typography>
+                </Cell>
+              </BorderedBox>
+            );
+          })}
         </Box>
         {/* right side column that scrolls */}
         <BoxShadow position="relative" flex={1} overflow="auto" ref={ref}>
@@ -118,45 +141,23 @@ export const TimelineView = () => {
             droppingItem={droppingItem}
             onDragStop={handleDragResizeStop}
             onResizeStop={handleDragResizeStop}
+            layout={layouts}
+            // using the onLayoutChange causes an issue with the handleDrop not working
+            // as we are updaing the layout in the dragstop and resizestop we don't need this
+            // onLayoutChange={handleLayoutChange}
           >
-            {/* <div key="a" data-grid={{ x: 0, y: 2, w: 4, h: 1, static: true }}>
-              <div style={{ height: '100%', background: 'yellow' }}>Static1 x: 0 y: 2</div>
-            </div>
-            <div key="b" data-grid={{ x: 4, y: 2, w: 4, h: 1, static: true }}>
-              <div style={{ height: '100%', background: 'red' }}>Static2 x: 4 y: 2</div>
-            </div>
-            <div key="c" data-grid={{ x: 8, y: 3, w: 4, h: 1, static: true }}>
-              <div style={{ height: '100%', background: 'grey' }}>Static3 x: 8 y: 3</div>
-            </div> */}
-
-            {resources.map((_resource, index) =>
-              days.map((day, dayIndex) =>
-                day.divisions.map((_division, divIndex) => {
-                  const x = (dayIndex * day.divisions.length + divIndex) * config.divisionParts;
-                  const y = index;
-                  return (
-                    <div
-                      data-key={`cell-${index}-${dayIndex}-${divIndex}`}
-                      key={`cell-${index}-${dayIndex}-${divIndex}`}
-                      data-grid={{
-                        x: x,
-                        y: y,
-                        w: 4,
-                        h: 1,
-                        static: true,
-                      }}
-                    >
-                      <Cell
-                        classes={['no-padding', 'light-border']}
-                        height={config.rowMinHeight - 2}
-                        maxWidth={config.divisionMinWidth}
-                        minWidth={config.divisionMinWidth}
-                      ></Cell>
-                    </div>
-                  );
-                }),
-              ),
-            )}
+            {gridLayouts.map((layout) => {
+              return (
+                <div key={layout.i}>
+                  <Cell
+                    classes={['no-padding', 'light-border']}
+                    height={config.rowMinHeight * layout.h - 2}
+                    maxWidth={config.divisionMinWidth}
+                    minWidth={config.divisionMinWidth}
+                  ></Cell>
+                </div>
+              );
+            })}
             {events
               .filter((e) => e.resourceId)
               .map((event) => {

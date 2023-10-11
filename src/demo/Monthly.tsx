@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import { format, isFirstDayOfMonth, isWeekend, startOfToday } from 'date-fns';
+import { Avatar, Box, IconButton, Typography } from '@mui/material';
+import { addDays, format, isFirstDayOfMonth, isWeekend, startOfToday } from 'date-fns';
 import { Scheduler } from '../components/Scheduler';
-import { CalEvent, ScheduleDay } from '../types';
-import { SchedulerDateControls } from '../components/SchedulerDateControls';
+import { CalEvent, Resource, ScheduleDay } from '../types';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { divisionDetails, events as rawEvents, resources } from '../data/monthly';
 
 const myDivisionWidth = 50;
@@ -22,33 +23,48 @@ function Monthly() {
     });
   };
 
+  const handleGoBack = () => {
+    setActiveDate((d) => addDays(d, -1));
+  };
+  const handleGoForward = () => {
+    setActiveDate((d) => addDays(d, 1));
+  };
+
   return (
     <>
       <Box mb={2} display="flex" alignItems="center" flexDirection="column">
         <Typography variant="h5" mb={1}>
           Pragmatic Scheduler Demo - Monthly
         </Typography>
-        <Typography variant="subtitle1">This example also has a Custom Header Row passed</Typography>
+        <Typography variant="subtitle1">This example also has a Custom Components passed</Typography>
       </Box>
-      <Box mb={2} display="flex" justifyContent="center">
-        {/* <SchedulerDateControls activeDate={activeDate} setActiveDate={setActiveDate} /> */}
+      <Box display="flex">
+        <Box flex={1} minWidth={0}>
+          <Scheduler
+            activeDate={activeDate}
+            resources={resources}
+            events={events}
+            divisionDetails={divisionDetails}
+            onEventChange={handleEventChange}
+            HeaderRow={HeaderRow}
+            ResourceCell={ResourceCell}
+            ResourceHeader={() => <ResourceHeader onClick={handleGoBack} />}
+            config={{
+              resourceColumnWidth: 60,
+              rowMinHeight: 70,
+              divisionWidth: myDivisionWidth,
+              eventMinSeconds: 60 * 60 * 9, // 9 hours
+              divisionParts: 1,
+              daysToDisplay: 30,
+            }}
+          />
+        </Box>
+        <Box>
+          <IconButton onClick={handleGoForward}>
+            <ArrowForwardIosIcon />
+          </IconButton>
+        </Box>
       </Box>
-      <Scheduler
-        activeDate={activeDate}
-        resources={resources}
-        events={events}
-        divisionDetails={divisionDetails}
-        onEventChange={handleEventChange}
-        HeaderRow={HeaderRow}
-        config={{
-          resourceColumnWidth: 220,
-          rowMinHeight: 70,
-          divisionWidth: myDivisionWidth,
-          eventMinSeconds: 60 * 60 * 9, // 9 hours
-          divisionParts: 1,
-          daysToDisplay: 30,
-        }}
-      />
     </>
   );
 }
@@ -89,6 +105,25 @@ const HeaderRow = ({ days }: { days: ScheduleDay[] }) => {
       </Box>
     );
   });
+};
+
+const ResourceCell = ({ resource }: { resource: Resource }) => {
+  return (
+    <Box display="flex" justifyContent="center" px={1.25} flexDirection="column">
+      <Avatar sx={{ bgcolor: (resource.data as { color: string })?.color }}>{resource.name[0]}</Avatar>
+      <Typography variant="body2">{resource.name}</Typography>
+    </Box>
+  );
+};
+
+const ResourceHeader = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <Box display="flex" alignItems="center" justifyContent="center">
+      <IconButton onClick={onClick}>
+        <ArrowBackIosIcon />
+      </IconButton>
+    </Box>
+  );
 };
 
 export default Monthly;

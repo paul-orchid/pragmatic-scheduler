@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import { Box, styled } from '@mui/material';
 import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail } from '../types';
-import { addDays, endOfDay, startOfDay } from 'date-fns';
+import { addDays, endOfDay } from 'date-fns';
 import { defaultConfig, defaultDivisionDetails } from '../constants/defaults';
 import { useDateToDivisions } from '../hooks/useDateToDivisions';
 import { TimelineView } from '../views/TimelineView';
@@ -33,6 +33,8 @@ export const SchedulerContext = React.createContext<{
   calendarBounds: { start: Date; end: Date; range: number; totalDivisions: number };
   onEventChange?: (event: CalEvent) => void;
   HeaderRow?: React.FC<{ days: ScheduleDay[] }>;
+  ResourceCell?: React.FC<{ resource: Resource }>;
+  ResourceHeader?: React.FC;
 }>({
   activeDate: new Date(),
   days: [],
@@ -55,6 +57,8 @@ export const Scheduler = ({
   config = defaultConfig,
   onEventChange,
   HeaderRow,
+  ResourceCell,
+  ResourceHeader,
 }: {
   activeDate: Date;
   divisionDetails?: DivisionDetail[];
@@ -63,6 +67,8 @@ export const Scheduler = ({
   config?: Config;
   onEventChange?: (event: CalEvent) => void;
   HeaderRow?: React.FC<{ days: ScheduleDay[] }>;
+  ResourceCell?: React.FC<{ resource: Resource }>;
+  ResourceHeader?: React.FC;
 }) => {
   const { dateToDivisions } = useDateToDivisions();
   const firstDay = useMemo(() => addDays(activeDate, -1), [activeDate]);
@@ -108,6 +114,8 @@ export const Scheduler = ({
         calendarBounds: { start: firstDay, end: lastDay, range: range, totalDivisions: totalDivisions },
         onEventChange: onEventChange,
         HeaderRow: HeaderRow,
+        ResourceCell: ResourceCell,
+        ResourceHeader: ResourceHeader,
       }}
     >
       <Container>

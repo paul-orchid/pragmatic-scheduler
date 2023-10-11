@@ -19,6 +19,7 @@ export type DivisionDetail = {
 export type Resource = {
   name: string;
   id: string;
+  data?: unknown;
 };
 
 export type CalEvent = {

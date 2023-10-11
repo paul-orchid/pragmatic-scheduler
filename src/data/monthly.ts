@@ -3,9 +3,9 @@ import { CalEvent, DivisionDetail, Resource } from '../types';
 import { Colors } from '../constants/colors';
 
 export const resources: Resource[] = [
-  { id: '1', name: 'Andy' },
-  { id: '2', name: 'Adam' },
-  { id: '3', name: 'Sarah' },
+  { id: '1', name: 'Andy', data: { color: 'red' } },
+  { id: '2', name: 'Adam', data: { color: 'green' } },
+  { id: '3', name: 'Sarah', data: { color: 'orange' } },
 ];
 
 export const events: CalEvent[] = [

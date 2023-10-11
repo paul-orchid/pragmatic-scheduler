@@ -2,13 +2,14 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import { SchedulerContext } from '../components/Scheduler';
 import { HeaderRow, UnAssignedEvents } from '../components/HeaderRow';
 import { Box, Typography } from '@mui/material';
-import { BorderedBox, BoxShadow } from '../layout/BorderedBox';
+import { BorderedBox } from '../layout/BorderedBox';
+import { ResourceCell } from '../layout/ResourceCell';
+import { ResourceHeader } from '../layout/ResourceHeader';
 import { Cell } from '../layout/Cell';
 import { Colors } from '../constants/colors';
 import GridLayout from 'react-grid-layout';
 import { EventTile } from '../components/EventTile';
 import { useCalcEventPosition } from '../hooks/useCalcEventPosition';
-import { useCalcResourceRows } from '../hooks/useCalcResourceRows';
 import { useLayoutToCalEvent } from '../hooks/useLayoutToCalEvent';
 import { useCalcGridPositions } from '../hooks/useCalcGridPositions';
 import { CalEvent } from '../types';
@@ -28,7 +29,6 @@ export const TimelineView = () => {
   const layoutToCalEvent = useLayoutToCalEvent();
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const gridLayouts = useCalcGridPositions();
-  const calcResourceRows = useCalcResourceRows();
 
   const [dragCalEvent, setDragCalEvent] = useState<CalEvent | undefined>();
   const [droppingItem, setDroppingItem] = useState<GridLayout.Layout>({ i: 'droppedItem', w: 4, h: 1, x: 0, y: 0 });
@@ -127,29 +127,18 @@ export const TimelineView = () => {
       )}
       <Box display="flex">
         {/* left side column that does not scroll */}
-        <Box marginTop={config.unAssignedRows ? `${config.rowMinHeight * 2}px` : 0}>
-          <BorderedBox
-            px={4}
-            alignItems="center"
-            maxWidth={config.resourceColumnWidth}
-            minWidth={config.resourceColumnWidth}
-            minHeight={config.rowMinHeight}
-          >
-            <Typography variant="subtitle2">TEAM</Typography>
-          </BorderedBox>
-          {resources.map((resource) => {
-            const rows = calcResourceRows(resource);
-            return (
-              <BorderedBox minHeight={config.rowMinHeight * rows} key={resource.id}>
-                <Cell alignItems="center" maxWidth={config.resourceColumnWidth} minWidth={config.resourceColumnWidth}>
-                  <Typography variant="subtitle2">{resource.name}</Typography>
-                </Cell>
-              </BorderedBox>
-            );
-          })}
+        <Box
+          marginTop={config.unAssignedRows ? `${config.rowMinHeight * 2}px` : 0}
+          maxWidth={config.resourceColumnWidth}
+          minWidth={config.resourceColumnWidth}
+        >
+          <ResourceHeader />
+          {resources.map((resource) => (
+            <ResourceCell key={resource.id} resource={resource} />
+          ))}
         </Box>
         {/* right side column that scrolls */}
-        <BoxShadow position="relative" flex={1} overflow="auto" ref={ref}>
+        <Box position="relative" flex={1} overflow="auto" ref={ref}>
           {config.unAssignedRows && <UnAssignedEvents onDragStart={handleUnassignedDragStart} />}
           <HeaderRow days={days} />
           <GridLayout
@@ -173,12 +162,9 @@ export const TimelineView = () => {
             {gridLayouts.map((layout) => {
               return (
                 <div key={layout.i}>
-                  <Cell
-                    classes={['no-padding', 'light-border']}
-                    height={config.rowMinHeight * layout.h - 2}
-                    maxWidth={config.divisionWidth}
-                    minWidth={config.divisionWidth}
-                  ></Cell>
+                  <Box width={config.divisionWidth} height={config.rowMinHeight * layout.h - 2}>
+                    <Cell classes={['no-padding', 'light-border']} height="100%"></Cell>
+                  </Box>
                 </div>
               );
             })}
@@ -193,7 +179,7 @@ export const TimelineView = () => {
                 );
               })}
           </GridLayout>
-        </BoxShadow>
+        </Box>
       </Box>
     </Box>
   );

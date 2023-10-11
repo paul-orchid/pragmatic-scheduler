@@ -2,6 +2,10 @@
 
 Pragmatic Scheduler is a React Resource Scheduler based on [Material UI](https://mui.com/material-ui/getting-started/) and uses [React Grid Layout](https://github.com/react-grid-layout/react-grid-layout) for the Drag/Drop/Resize functionality
 
+## Demo
+
+[Demo](https://paul-orchid.github.io/pragmatic-scheduler) Available here
+
 ## Installation
 
 Install the Pragmatic Scheduler [package](https://www.npmjs.org/package/pragmatic-scheduler) package using [npm](https://www.npmjs.com/):
@@ -128,4 +132,30 @@ buttonText?: string;
 // When the forward/back buttons are pressed, how many days to move forward/back
 moveByDays?: number;
 
+```
+
+# Developer notes
+
+### Demo Site
+
+To update the demo page on github Pages run:
+
+```bash
+npm run deploy
+```
+
+The `predeploy` script will build the demo app
+
+### NPM process
+
+Icrement the version
+
+```bash
+npm version patch
+```
+
+Publish (tests and linting will run as defined in the prepublishOnly script)
+
+```bash
+npm publish
 ```

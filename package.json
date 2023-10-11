@@ -8,18 +8,23 @@
     "dist/**/*"
   ],
   "scripts": {
-    "dev:client": "react-scripts start",
+    "dev:client_old": "react-scripts start",
+    "dev:client": "PUBLIC_URL=/ react-scripts start",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "build": "tsc",
+    "build-demo": "react-scripts build",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "npx eslint . --ext .ts,.tsx,.js,.jsx",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "predeploy": "npm run build-demo",
+    "deploy": "gh-pages -d build"
   },
+  "homepage": "https://paul-orchid.github.io/pragmatic-scheduler",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/paul-orchid/pragmatic-scheduler.git"
@@ -56,6 +61,7 @@
     "@types/react-router": "^5.1.18",
     "babel-jest": "^27.5.1",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "gh-pages": "^6.0.0",
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
     "pragmatic-ui": "^2.0.49",

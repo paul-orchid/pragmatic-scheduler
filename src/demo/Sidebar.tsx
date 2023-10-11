@@ -16,9 +16,9 @@ const Sidebar = () => {
     () => [
       {
         text: 'Day',
-        key: '',
+        key: 'daily',
         icon: <ViewDayIcon />,
-        onClick: () => navigate('/'),
+        onClick: () => navigate('/daily'),
       },
       {
         text: 'Week',

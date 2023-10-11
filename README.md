@@ -138,7 +138,11 @@ moveByDays?: number;
 
 ### Demo Site
 
-To update the demo page on github Pages run:
+The demo site id hosted on Github Pages, which isn't designed to run SPA. The easiest way to get around this constraint is to use the HashRouter in the demo app rather than BrowserRouter.
+
+Details [here](https://stackoverflow.com/a/46060999/4553162)
+
+To update the demo page on Github Pages run:
 
 ```bash
 npm run deploy

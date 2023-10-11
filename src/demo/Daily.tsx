@@ -23,6 +23,13 @@ function Daily() {
     <>
       <Box mb={2} display="flex" alignItems="center" flexDirection="column">
         <Typography variant="h5">Pragmatic Scheduler Demo - Daily</Typography>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/paul-orchid/pragmatic-scheduler/blob/main/src/demo/Daily.tsx"
+        >
+          Source Code
+        </a>
       </Box>
       <Box mb={2} display="flex" justifyContent="center">
         <SchedulerDateControls activeDate={activeDate} setActiveDate={setActiveDate} />

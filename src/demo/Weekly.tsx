@@ -29,6 +29,13 @@ function Weekly() {
           Pragmatic Scheduler Demo - Weekly
         </Typography>
         <Typography variant="subtitle1">This example has Custom Event tiles rendered</Typography>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/paul-orchid/pragmatic-scheduler/blob/main/src/demo/Weekly.tsx"
+        >
+          Source Code
+        </a>
       </Box>
       <Box mb={2} display="flex" justifyContent="flex-end">
         <SchedulerDateControls

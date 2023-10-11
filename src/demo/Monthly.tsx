@@ -37,6 +37,13 @@ function Monthly() {
           Pragmatic Scheduler Demo - Monthly
         </Typography>
         <Typography variant="subtitle1">This example also has Custom Components passed</Typography>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/paul-orchid/pragmatic-scheduler/blob/main/src/demo/Monthly.tsx"
+        >
+          Source Code
+        </a>
       </Box>
       <Box display="flex">
         <Box flex={1} minWidth={0}>

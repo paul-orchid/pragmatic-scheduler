@@ -6,6 +6,7 @@ import { CalEvent, GridCellLayout, Resource, ScheduleDay } from '../types';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { divisionDetails, events as rawEvents, resources } from '../data/monthly';
+import { SourceCodeLink } from './SourceCodeLink';
 
 const myDivisionWidth = 50;
 const weekendColor = '#EDF1F6';
@@ -37,13 +38,7 @@ function Monthly() {
           Pragmatic Scheduler Demo - Monthly
         </Typography>
         <Typography variant="subtitle1">This example also has Custom Components passed</Typography>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/paul-orchid/pragmatic-scheduler/blob/main/src/demo/Monthly.tsx"
-        >
-          Source Code
-        </a>
+        <SourceCodeLink href="https://github.com/paul-orchid/pragmatic-scheduler/blob/main/src/demo/Monthly.tsx" />
       </Box>
       <Box display="flex">
         <Box flex={1} minWidth={0}>

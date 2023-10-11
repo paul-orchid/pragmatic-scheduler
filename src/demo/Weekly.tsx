@@ -5,6 +5,7 @@ import { Scheduler } from '../components/Scheduler';
 import { CalEvent, Resource, ScheduleDay } from '../types';
 import { divisionDetails, events as rawEvents, resources } from '../data/weekly';
 import { SchedulerDateControls } from '../components/SchedulerDateControls';
+import { SourceCodeLink } from './SourceCodeLink';
 
 const myDivisionWidth = 160;
 const weekendColor = '#EDF1F6';
@@ -29,13 +30,7 @@ function Weekly() {
           Pragmatic Scheduler Demo - Weekly
         </Typography>
         <Typography variant="subtitle1">This example has Custom Event tiles rendered</Typography>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/paul-orchid/pragmatic-scheduler/blob/main/src/demo/Weekly.tsx"
-        >
-          Source Code
-        </a>
+        <SourceCodeLink href="https://github.com/paul-orchid/pragmatic-scheduler/blob/main/src/demo/Weekly.tsx" />
       </Box>
       <Box mb={2} display="flex" justifyContent="flex-end">
         <SchedulerDateControls

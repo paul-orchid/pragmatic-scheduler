@@ -10,13 +10,13 @@ import Sidebar from './demo/Sidebar';
 import AppRouter from './demo/AppRouter';
 
 function App() {
-  const basename = useRef(
-    !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? undefined : '/pragmatic-scheduler',
-  ).current;
+  // const basename = useRef(
+  //   !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? undefined : '/pragmatic-scheduler',
+  // ).current;
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <HashRouter basename={basename}>
+        <HashRouter>
           <Box display="flex" flexDirection="row" height="100%" width="100%">
             <Sidebar />
 

@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/pragmatic-scheduler/static/css/main.8af28ae3.css",
-    "main.js": "/pragmatic-scheduler/static/js/main.5f5048bc.js",
+    "main.js": "/pragmatic-scheduler/static/js/main.4931c5ff.js",
     "static/js/787.6c0ec76b.chunk.js": "/pragmatic-scheduler/static/js/787.6c0ec76b.chunk.js",
     "index.html": "/pragmatic-scheduler/index.html",
     "main.8af28ae3.css.map": "/pragmatic-scheduler/static/css/main.8af28ae3.css.map",
-    "main.5f5048bc.js.map": "/pragmatic-scheduler/static/js/main.5f5048bc.js.map",
+    "main.4931c5ff.js.map": "/pragmatic-scheduler/static/js/main.4931c5ff.js.map",
     "787.6c0ec76b.chunk.js.map": "/pragmatic-scheduler/static/js/787.6c0ec76b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8af28ae3.css",
-    "static/js/main.5f5048bc.js"
+    "static/js/main.4931c5ff.js"
   ]
 }

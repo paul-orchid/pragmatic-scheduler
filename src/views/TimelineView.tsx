@@ -5,6 +5,7 @@ import { Box, Typography } from '@mui/material';
 import { BorderedBox } from '../layout/BorderedBox';
 import { ResourceCell } from '../layout/ResourceCell';
 import { ResourceHeader } from '../layout/ResourceHeader';
+import { GridCell } from '../layout/GridCell';
 import { Cell } from '../layout/Cell';
 import { Colors } from '../constants/colors';
 import GridLayout from 'react-grid-layout';
@@ -163,7 +164,7 @@ export const TimelineView = () => {
               return (
                 <div key={layout.i}>
                   <Box width={config.divisionWidth} height={config.rowMinHeight * layout.h - 2}>
-                    <Cell classes={['no-padding', 'light-border']} height="100%"></Cell>
+                    <GridCell layout={layout} />
                   </Box>
                 </div>
               );

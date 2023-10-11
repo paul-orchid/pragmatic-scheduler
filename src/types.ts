@@ -1,3 +1,4 @@
+import GridLayout from 'react-grid-layout';
 export type ScheduleDay = {
   date: Date;
   divisions: Division[];
@@ -41,3 +42,5 @@ export type Config = {
   divisionParts: number;
   daysToDisplay: number;
 };
+
+export type GridCellLayout = GridLayout.Layout & { day: ScheduleDay; division: Division };

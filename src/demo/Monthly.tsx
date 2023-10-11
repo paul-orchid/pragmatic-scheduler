@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Avatar, Box, IconButton, Typography } from '@mui/material';
-import { addDays, format, isFirstDayOfMonth, isWeekend, startOfToday } from 'date-fns';
+import { addDays, format, isFirstDayOfMonth, isSunday, isWeekend, startOfToday } from 'date-fns';
 import { Scheduler } from '../components/Scheduler';
-import { CalEvent, Resource, ScheduleDay } from '../types';
+import { CalEvent, GridCellLayout, Resource, ScheduleDay } from '../types';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { divisionDetails, events as rawEvents, resources } from '../data/monthly';
@@ -36,7 +36,7 @@ function Monthly() {
         <Typography variant="h5" mb={1}>
           Pragmatic Scheduler Demo - Monthly
         </Typography>
-        <Typography variant="subtitle1">This example also has a Custom Components passed</Typography>
+        <Typography variant="subtitle1">This example also has Custom Components passed</Typography>
       </Box>
       <Box display="flex">
         <Box flex={1} minWidth={0}>
@@ -49,6 +49,7 @@ function Monthly() {
             HeaderRow={HeaderRow}
             ResourceCell={ResourceCell}
             ResourceHeader={() => <ResourceHeader onClick={handleGoBack} />}
+            GridCell={GridCell}
             config={{
               resourceColumnWidth: 60,
               rowMinHeight: 70,
@@ -122,6 +123,33 @@ const ResourceHeader = ({ onClick }: { onClick: () => void }) => {
       <IconButton onClick={onClick}>
         <ArrowBackIosIcon />
       </IconButton>
+    </Box>
+  );
+};
+
+const GridCell = ({ layout }: { layout: GridCellLayout }) => {
+  const _isWeekend = isWeekend(layout.day.date);
+  const _isSunday = isSunday(layout.day.date);
+
+  return (
+    <Box
+      height="100%"
+      sx={{ backgroundColor: _isWeekend ? weekendColor : 'unset', margin: '1px' }}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+    >
+      {_isSunday && (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          sx={{ backgroundColor: '#14142B40', borderRadius: 2, height: 50, width: 40, userSelect: 'none' }}
+        >
+          24
+        </Box>
+      )}
     </Box>
   );
 };

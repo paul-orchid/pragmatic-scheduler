@@ -1,13 +1,13 @@
 import { useContext, useMemo } from 'react';
 import { SchedulerContext } from '../components/Scheduler';
-import GridLayout from 'react-grid-layout';
 import { useCalcResourceRows } from './useCalcResourceRows';
+import { GridCellLayout } from '../types';
 
 export const useCalcGridPositions = () => {
   const { resources, config, days } = useContext(SchedulerContext);
   const calcResourceRows = useCalcResourceRows();
 
-  const layouts: GridLayout.Layout[] = useMemo(() => {
+  const layouts: GridCellLayout[] = useMemo(() => {
     let rowCount = 0;
     return resources
       .map((_resource, index) => {
@@ -15,7 +15,7 @@ export const useCalcGridPositions = () => {
         const y = rowCount;
         rowCount += rows;
         return days.map((day, dayIndex) =>
-          day.divisions.map((_division, divIndex) => {
+          day.divisions.map((division, divIndex) => {
             const x = (dayIndex * day.divisions.length + divIndex) * config.divisionParts;
             return {
               i: `cell-${index}-${dayIndex}-${divIndex}`,
@@ -24,6 +24,8 @@ export const useCalcGridPositions = () => {
               w: config.divisionParts,
               h: rows,
               static: true,
+              day: day,
+              division: division,
             };
           }),
         );

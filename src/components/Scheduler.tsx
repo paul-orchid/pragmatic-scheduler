@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { Box, styled } from '@mui/material';
-import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail } from '../types';
+import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail, GridCellLayout } from '../types';
 import { addDays, endOfDay } from 'date-fns';
 import { defaultConfig, defaultDivisionDetails } from '../constants/defaults';
 import { useDateToDivisions } from '../hooks/useDateToDivisions';
@@ -35,6 +35,7 @@ export const SchedulerContext = React.createContext<{
   HeaderRow?: React.FC<{ days: ScheduleDay[] }>;
   ResourceCell?: React.FC<{ resource: Resource }>;
   ResourceHeader?: React.FC;
+  GridCell?: React.FC<{ layout: GridCellLayout }>;
 }>({
   activeDate: new Date(),
   days: [],
@@ -59,6 +60,7 @@ export const Scheduler = ({
   HeaderRow,
   ResourceCell,
   ResourceHeader,
+  GridCell,
 }: {
   activeDate: Date;
   divisionDetails?: DivisionDetail[];
@@ -69,6 +71,7 @@ export const Scheduler = ({
   HeaderRow?: React.FC<{ days: ScheduleDay[] }>;
   ResourceCell?: React.FC<{ resource: Resource }>;
   ResourceHeader?: React.FC;
+  GridCell?: React.FC<{ layout: GridCellLayout }>;
 }) => {
   const { dateToDivisions } = useDateToDivisions();
   const firstDay = useMemo(() => addDays(activeDate, -1), [activeDate]);
@@ -116,6 +119,7 @@ export const Scheduler = ({
         HeaderRow: HeaderRow,
         ResourceCell: ResourceCell,
         ResourceHeader: ResourceHeader,
+        GridCell: GridCell,
       }}
     >
       <Container>

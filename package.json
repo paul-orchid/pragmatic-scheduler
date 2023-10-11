@@ -41,6 +41,7 @@
     "url": "https://github.com/paul-orchid/pragmatic-scheduler/issues"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",

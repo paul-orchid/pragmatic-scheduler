@@ -1,13 +1,11 @@
 import { ThemeProvider } from '@mui/system';
 import React from 'react';
 import './App.css';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { theme } from './layout/theme';
 import { BrowserRouter } from 'react-router-dom';
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
 import Sidebar from './demo/Sidebar';
 import AppRouter from './demo/AppRouter';
 

@@ -4,7 +4,6 @@ export const defaultConfig: Config = {
   resourceColumnWidth: 220,
   rowHeight: 70,
   divisionWidth: 160,
-  eventMinSeconds: 30 * 60, // 30 minutes
   unAssignedRows: 2,
   divisionParts: 4,
   daysToDisplay: 3,

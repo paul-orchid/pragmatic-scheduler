@@ -37,7 +37,6 @@ export type Config = {
   resourceColumnWidth: number;
   rowHeight: number;
   divisionWidth: number;
-  eventMinSeconds: number;
   unAssignedRows?: number;
   divisionParts: number;
   daysToDisplay: number;

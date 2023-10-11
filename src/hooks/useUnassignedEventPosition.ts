@@ -8,7 +8,7 @@ export const useUnassignedEventPosition = () => {
   const {
     days,
     calendarBounds: { totalDivisions },
-    config: { eventMinSeconds, rowHeight },
+    config: { rowHeight, divisionParts, divisionWidth },
   } = useContext(SchedulerContext);
 
   const getOverlappingEvents = useOverlappingEvents();
@@ -28,7 +28,7 @@ export const useUnassignedEventPosition = () => {
         );
       }, 0);
       const secondsToWidthConversion = (containerWidth / totalTimeDisplayed) * 1000;
-      const minWidth = eventMinSeconds * secondsToWidthConversion;
+      const minWidth = divisionWidth / divisionParts;
 
       outerLoop: for (const day of days) {
         if (
@@ -74,6 +74,6 @@ export const useUnassignedEventPosition = () => {
         height,
       };
     },
-    [days, eventMinSeconds, getOverlappingEvents, rowHeight, totalDivisions],
+    [days, divisionParts, divisionWidth, getOverlappingEvents, rowHeight, totalDivisions],
   );
 };

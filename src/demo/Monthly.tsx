@@ -54,7 +54,6 @@ function Monthly() {
               resourceColumnWidth: 60,
               rowHeight: 70,
               divisionWidth: myDivisionWidth,
-              eventMinSeconds: 60 * 60 * 9, // 9 hours
               divisionParts: 1,
               daysToDisplay: 30,
             }}

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 import { Box, styled } from '@mui/material';
 import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail, GridCellLayout } from '../types';
 import { addDays, endOfDay } from 'date-fns';

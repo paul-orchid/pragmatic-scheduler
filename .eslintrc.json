@@ -17,7 +17,7 @@
     "sourceType": "module"
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
-  "ignorePatterns": ["/dist/*"],
+  "ignorePatterns": ["/dist/*", "/build/*"],
   "rules": {
     "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
     "max-len": ["error", { "code": 120, "ignorePattern": "^\\s*<path\\s" }],

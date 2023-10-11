@@ -36,6 +36,7 @@ export const SchedulerContext = React.createContext<{
   ResourceCell?: React.FC<{ resource: Resource }>;
   ResourceHeader?: React.FC;
   GridCell?: React.FC<{ layout: GridCellLayout }>;
+  EventTile?: React.FC<{ event: CalEvent }>;
 }>({
   activeDate: new Date(),
   days: [],
@@ -61,6 +62,7 @@ export const Scheduler = ({
   ResourceCell,
   ResourceHeader,
   GridCell,
+  EventTile,
 }: {
   activeDate: Date;
   divisionDetails?: DivisionDetail[];
@@ -72,6 +74,7 @@ export const Scheduler = ({
   ResourceCell?: React.FC<{ resource: Resource }>;
   ResourceHeader?: React.FC;
   GridCell?: React.FC<{ layout: GridCellLayout }>;
+  EventTile?: React.FC<{ event: CalEvent }>;
 }) => {
   const { dateToDivisions } = useDateToDivisions();
   const firstDay = useMemo(() => addDays(activeDate, -1), [activeDate]);
@@ -120,6 +123,7 @@ export const Scheduler = ({
         ResourceCell: ResourceCell,
         ResourceHeader: ResourceHeader,
         GridCell: GridCell,
+        EventTile: EventTile,
       }}
     >
       <Container>

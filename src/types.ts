@@ -35,7 +35,7 @@ export type CalEvent = {
 
 export type Config = {
   resourceColumnWidth: number;
-  rowMinHeight: number;
+  rowHeight: number;
   divisionWidth: number;
   eventMinSeconds: number;
   unAssignedRows?: number;

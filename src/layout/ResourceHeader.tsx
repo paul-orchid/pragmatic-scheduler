@@ -5,14 +5,14 @@ import { BorderedBox } from './BorderedBox';
 
 export const ResourceHeader = () => {
   const {
-    config: { rowMinHeight },
+    config: { rowHeight },
     ResourceHeader: ResourceHeaderOverride,
   } = useContext(SchedulerContext);
 
   const Component = ResourceHeaderOverride || DefaultResourceHeader;
 
   return (
-    <Box minHeight={rowMinHeight}>
+    <Box minHeight={rowHeight} maxHeight={rowHeight}>
       <Component />
     </Box>
   );

@@ -52,7 +52,7 @@ function Monthly() {
             GridCell={GridCell}
             config={{
               resourceColumnWidth: 60,
-              rowMinHeight: 70,
+              rowHeight: 70,
               divisionWidth: myDivisionWidth,
               eventMinSeconds: 60 * 60 * 9, // 9 hours
               divisionParts: 1,

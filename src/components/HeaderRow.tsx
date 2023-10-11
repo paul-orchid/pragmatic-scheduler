@@ -10,11 +10,11 @@ import { EventTile } from './EventTile';
 export const HeaderRow = ({ days }: { days: ScheduleDay[] }) => {
   const {
     HeaderRow: HeaderRowOverride,
-    config: { rowMinHeight },
+    config: { rowHeight },
   } = useContext(SchedulerContext);
 
   return (
-    <Box flex={1} display="flex" minHeight={rowMinHeight} maxHeight={rowMinHeight}>
+    <Box flex={1} display="flex" minHeight={rowHeight} maxHeight={rowHeight}>
       {/* Add columns for each day */}
       {HeaderRowOverride ? (
         <HeaderRowOverride days={days} />
@@ -63,7 +63,7 @@ const Container = styled('div')(() => ({
 export const UnAssignedEvents = ({ onDragStart }: { onDragStart: (event: CalEvent) => void }) => {
   const {
     events,
-    config: { unAssignedRows = 1, rowMinHeight, divisionWidth },
+    config: { unAssignedRows = 1, rowHeight, divisionWidth },
     calendarBounds: { totalDivisions },
   } = useContext(SchedulerContext);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -93,7 +93,7 @@ export const UnAssignedEvents = ({ onDragStart }: { onDragStart: (event: CalEven
       position="relative"
       width={totalDivisions * divisionWidth}
       overflow="auto"
-      height={unAssignedRows * rowMinHeight}
+      height={unAssignedRows * rowHeight}
       ref={ref}
     >
       {unAssignedEvents.map((event) => {

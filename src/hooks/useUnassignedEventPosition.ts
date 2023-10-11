@@ -8,7 +8,7 @@ export const useUnassignedEventPosition = () => {
   const {
     days,
     calendarBounds: { totalDivisions },
-    config: { eventMinSeconds, rowMinHeight },
+    config: { eventMinSeconds, rowHeight },
   } = useContext(SchedulerContext);
 
   const getOverlappingEvents = useOverlappingEvents();
@@ -50,11 +50,8 @@ export const useUnassignedEventPosition = () => {
                 (event.endTime.getTime() - division.startTime.getTime()) / divisionRange,
                 0,
               );
-              // right = (1 - (divisionCount + fractionOfDivision) / totalDivisions) * containerWidth;
               width =
                 containerWidth - (1 - (divisionCount + fractionOfDivision) / totalDivisions) * containerWidth - left;
-            }
-            if (left && width) {
               break outerLoop;
             }
             divisionCount++;
@@ -66,8 +63,8 @@ export const useUnassignedEventPosition = () => {
 
       const overlappingEvents = getOverlappingEvents(event);
 
-      const top = 2 + overlappingEvents.length * (rowMinHeight + 2);
-      const height = rowMinHeight;
+      const top = 2 + overlappingEvents.length * (rowHeight + 2);
+      const height = rowHeight;
       return {
         minWidth,
         secondsToWidthConversion,
@@ -77,6 +74,6 @@ export const useUnassignedEventPosition = () => {
         height,
       };
     },
-    [days, eventMinSeconds, getOverlappingEvents, rowMinHeight, totalDivisions],
+    [days, eventMinSeconds, getOverlappingEvents, rowHeight, totalDivisions],
   );
 };

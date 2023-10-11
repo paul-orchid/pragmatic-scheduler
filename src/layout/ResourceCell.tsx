@@ -7,7 +7,7 @@ import { Resource } from '../types';
 
 export const ResourceCell = ({ resource }: { resource: Resource }) => {
   const {
-    config: { rowMinHeight },
+    config: { rowHeight },
     ResourceCell: ResourceCellOverride,
   } = useContext(SchedulerContext);
   const calcResourceRows = useCalcResourceRows();
@@ -17,7 +17,7 @@ export const ResourceCell = ({ resource }: { resource: Resource }) => {
   const Component = ResourceCellOverride || DefaultResourceCell;
 
   return (
-    <Box display="flex" flex={1} minHeight={rowMinHeight * rows}>
+    <Box display="flex" flex={1} minHeight={rowHeight * rows}>
       <Component resource={resource} />
     </Box>
   );

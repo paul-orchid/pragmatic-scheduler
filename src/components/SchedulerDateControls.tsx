@@ -8,9 +8,13 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 export const SchedulerDateControls = ({
   activeDate,
   setActiveDate,
+  buttonText = 'TODAY',
+  moveByDays = 1,
 }: {
   activeDate: Date;
   setActiveDate: React.Dispatch<React.SetStateAction<Date>>;
+  buttonText?: string;
+  moveByDays?: number;
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -27,10 +31,10 @@ export const SchedulerDateControls = ({
     setOpen(true);
   };
   const handleGoForward = () => {
-    setActiveDate((d) => addDays(d, 1));
+    setActiveDate((d) => addDays(d, moveByDays));
   };
   const handleGoBack = () => {
-    setActiveDate((d) => addDays(d, -1));
+    setActiveDate((d) => addDays(d, -1 * moveByDays));
   };
 
   return (
@@ -49,7 +53,7 @@ export const SchedulerDateControls = ({
         renderInput={(params) => {
           return (
             <Button sx={{ marginX: 0.625 }} variant="outlined" ref={params.inputRef} onClick={handleOpen}>
-              TODAY
+              {buttonText}
             </Button>
           );
         }}

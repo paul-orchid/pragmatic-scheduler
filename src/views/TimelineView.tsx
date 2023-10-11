@@ -6,7 +6,6 @@ import { BorderedBox } from '../layout/BorderedBox';
 import { ResourceCell } from '../layout/ResourceCell';
 import { ResourceHeader } from '../layout/ResourceHeader';
 import { GridCell } from '../layout/GridCell';
-import { Cell } from '../layout/Cell';
 import { Colors } from '../constants/colors';
 import GridLayout from 'react-grid-layout';
 import { EventTile } from '../components/EventTile';
@@ -120,7 +119,7 @@ export const TimelineView = () => {
       {/* top row */}
       {config.unAssignedRows && (
         <Box display="flex">
-          <Box px={4} maxWidth={config.resourceColumnWidth} minWidth={config.resourceColumnWidth} />
+          <Box maxWidth={config.resourceColumnWidth} minWidth={config.resourceColumnWidth} />
           <BorderedBox px={3} py={2} sx={{ background: Colors.lightGrey }}>
             <Typography variant="tableHeader">UNASSIGNED</Typography>
           </BorderedBox>
@@ -129,7 +128,7 @@ export const TimelineView = () => {
       <Box display="flex">
         {/* left side column that does not scroll */}
         <Box
-          marginTop={config.unAssignedRows ? `${config.rowMinHeight * 2}px` : 0}
+          marginTop={config.unAssignedRows ? `${config.rowHeight * 2}px` : 0}
           maxWidth={config.resourceColumnWidth}
           minWidth={config.resourceColumnWidth}
         >
@@ -148,7 +147,7 @@ export const TimelineView = () => {
             compactType={null}
             allowOverlap={true}
             cols={cols}
-            rowHeight={config.rowMinHeight}
+            rowHeight={config.rowHeight}
             width={(cols * config.divisionWidth) / config.divisionParts}
             isBounded={true}
             isDroppable={true}
@@ -163,7 +162,7 @@ export const TimelineView = () => {
             {gridLayouts.map((layout) => {
               return (
                 <div key={layout.i}>
-                  <Box width={config.divisionWidth} height={config.rowMinHeight * layout.h - 2}>
+                  <Box width={config.divisionWidth} height={config.rowHeight * layout.h - 2}>
                     <GridCell layout={layout} />
                   </Box>
                 </div>

@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { theme } from './layout/theme';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import Sidebar from './demo/Sidebar';
 import AppRouter from './demo/AppRouter';
 
@@ -16,7 +16,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <BrowserRouter basename={basename}>
+        <HashRouter basename={basename}>
           <Box display="flex" flexDirection="row" height="100%" width="100%">
             <Sidebar />
 
@@ -24,7 +24,7 @@ function App() {
               <AppRouter />
             </Box>
           </Box>
-        </BrowserRouter>
+        </HashRouter>
       </LocalizationProvider>
     </ThemeProvider>
   );

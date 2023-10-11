@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@mui/system';
-import React from 'react';
+import React, { useRef } from 'react';
 import './App.css';
 import { Box } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -10,10 +10,13 @@ import Sidebar from './demo/Sidebar';
 import AppRouter from './demo/AppRouter';
 
 function App() {
+  const basename = useRef(
+    !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? undefined : '/pragmatic-scheduler',
+  ).current;
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <BrowserRouter>
+        <BrowserRouter basename={basename}>
           <Box display="flex" flexDirection="row" height="100%" width="100%">
             <Sidebar />
 

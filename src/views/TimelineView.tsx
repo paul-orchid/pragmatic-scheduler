@@ -1,14 +1,13 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { SchedulerContext } from '../components/Scheduler';
 import { HeaderRow, UnAssignedEvents } from '../components/HeaderRow';
-import { Box, Typography } from '@mui/material';
-import { BorderedBox } from '../layout/BorderedBox';
+import { Box } from '@mui/material';
 import { ResourceCell } from '../layout/ResourceCell';
 import { ResourceHeader } from '../layout/ResourceHeader';
 import { GridCell } from '../layout/GridCell';
-import { Colors } from '../constants/colors';
 import GridLayout from 'react-grid-layout';
 import { EventTile } from '../components/EventTile';
+import { UnassignedHeader } from '../components/UnassignedHeader';
 import { useCalcEventPosition } from '../hooks/useCalcEventPosition';
 import { useLayoutToCalEvent } from '../hooks/useLayoutToCalEvent';
 import { useCalcGridPositions } from '../hooks/useCalcGridPositions';
@@ -117,14 +116,7 @@ export const TimelineView = () => {
   return (
     <Box>
       {/* top row */}
-      {config.unAssignedRows && (
-        <Box display="flex">
-          <Box maxWidth={config.resourceColumnWidth} minWidth={config.resourceColumnWidth} />
-          <BorderedBox px={3} py={2} sx={{ background: Colors.lightGrey }}>
-            <Typography variant="tableHeader">UNASSIGNED</Typography>
-          </BorderedBox>
-        </Box>
-      )}
+      {config.unAssignedRows && <UnassignedHeader />}
       <Box display="flex">
         {/* left side column that does not scroll */}
         <Box
@@ -170,6 +162,7 @@ export const TimelineView = () => {
             })}
             {events
               .filter((e) => e.resourceId)
+              .sort((a, b) => (a.allowOverlap ? 0 : 1) - (b.allowOverlap ? 0 : 1))
               .map((event) => {
                 const dataGridProps = calcEventPosition(event);
                 return (

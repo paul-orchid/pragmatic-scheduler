@@ -65,6 +65,7 @@ export const UnAssignedEvents = ({ onDragStart }: { onDragStart: (event: CalEven
     events,
     config: { unAssignedRows = 1, rowHeight, divisionWidth },
     calendarBounds: { totalDivisions },
+    UnAssignedBoxProps,
   } = useContext(SchedulerContext);
   const ref = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -95,6 +96,7 @@ export const UnAssignedEvents = ({ onDragStart }: { onDragStart: (event: CalEven
       overflow="auto"
       height={unAssignedRows * rowHeight}
       ref={ref}
+      {...UnAssignedBoxProps}
     >
       {unAssignedEvents.map((event) => {
         const { top, height, left, width } = calcEventPosition(containerWidth, event);

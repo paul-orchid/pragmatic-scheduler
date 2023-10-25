@@ -31,6 +31,8 @@ export type CalEvent = {
   resourceId?: string;
   bgColor?: string;
   textColor?: string;
+  draggable?: boolean;
+  allowOverlap?: boolean;
 };
 
 export type Config = {

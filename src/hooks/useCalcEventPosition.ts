@@ -61,7 +61,19 @@ export const useCalcEventPosition = () => {
         }
         rowCount += calcResourceRows(_resource);
       }
-      return { i: event.id, x: x, y: rowCount + overlappingEvents.length, w: w, h: 1, maxH: 1 };
+
+      const y = rowCount + (event.allowOverlap ? 0 : overlappingEvents.length);
+
+      return {
+        i: event.id,
+        x: x,
+        y: y,
+        w: w,
+        h: 1,
+        maxH: 1,
+        isDraggable: event.draggable === false ? false : true,
+        isResizable: event.draggable === false ? false : true,
+      };
     },
     [calcResourceRows, days, divisionParts, getOverlappingEvents, resources],
   );

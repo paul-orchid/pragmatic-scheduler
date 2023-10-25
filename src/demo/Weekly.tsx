@@ -6,6 +6,7 @@ import { CalEvent, Resource, ScheduleDay } from '../types';
 import { divisionDetails, events as rawEvents, resources } from '../data/weekly';
 import { SchedulerDateControls } from '../components/SchedulerDateControls';
 import { SourceCodeLink } from './SourceCodeLink';
+import { Colors } from '../constants/colors';
 
 const myDivisionWidth = 160;
 const weekendColor = '#EDF1F6';
@@ -29,7 +30,9 @@ function Weekly() {
         <Typography variant="h5" mb={1}>
           Pragmatic Scheduler Demo - Weekly
         </Typography>
-        <Typography variant="subtitle1">This example has Custom Event tiles rendered</Typography>
+        <Typography variant="subtitle1">
+          This example has Custom Event tiles and Custom Unsassigned Area rendered
+        </Typography>
         <SourceCodeLink href="https://github.com/paul-orchid/pragmatic-scheduler/blob/main/src/demo/Weekly.tsx" />
       </Box>
       <Box mb={2} display="flex" justifyContent="flex-end">
@@ -49,6 +52,11 @@ function Weekly() {
         HeaderRow={HeaderRow}
         ResourceCell={ResourceCell}
         EventTile={EventTile}
+        UnassignedHeader={UnassignedHeader}
+        UnAssignedBoxProps={{
+          bgcolor: Colors.gold,
+          borderRadius: 2,
+        }}
         config={{
           resourceColumnWidth: 220,
           rowHeight: 70,
@@ -61,6 +69,14 @@ function Weekly() {
     </>
   );
 }
+
+const UnassignedHeader = () => {
+  return (
+    <Box flex={1} px={3} py={2} sx={{ background: Colors.fluroAmber }} borderRadius={2}>
+      <Typography variant="tableHeader">WEEKLY UNASSIGNED</Typography>
+    </Box>
+  );
+};
 
 const HeaderRow = ({ days }: { days: ScheduleDay[] }) => {
   return days.map((day, index) => {

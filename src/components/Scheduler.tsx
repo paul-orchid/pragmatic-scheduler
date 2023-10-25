@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import { Box, styled } from '@mui/material';
+import { Box, BoxProps, styled } from '@mui/material';
 import { ScheduleDay, Resource, CalEvent, Config, DivisionDetail, GridCellLayout } from '../types';
 import { addDays, endOfDay } from 'date-fns';
 import { defaultConfig, defaultDivisionDetails } from '../constants/defaults';
@@ -36,6 +36,8 @@ export const SchedulerContext = React.createContext<{
   HeaderRow?: React.FC<{ days: ScheduleDay[] }>;
   ResourceCell?: React.FC<{ resource: Resource }>;
   ResourceHeader?: React.FC;
+  UnassignedHeader?: React.FC;
+  UnAssignedBoxProps?: BoxProps;
   GridCell?: React.FC<{ layout: GridCellLayout }>;
   EventTile?: React.FC<{ event: CalEvent }>;
 }>({
@@ -62,6 +64,8 @@ export const Scheduler = ({
   HeaderRow,
   ResourceCell,
   ResourceHeader,
+  UnassignedHeader,
+  UnAssignedBoxProps,
   GridCell,
   EventTile,
 }: {
@@ -74,6 +78,8 @@ export const Scheduler = ({
   HeaderRow?: React.FC<{ days: ScheduleDay[] }>;
   ResourceCell?: React.FC<{ resource: Resource }>;
   ResourceHeader?: React.FC;
+  UnassignedHeader?: React.FC;
+  UnAssignedBoxProps?: BoxProps;
   GridCell?: React.FC<{ layout: GridCellLayout }>;
   EventTile?: React.FC<{ event: CalEvent }>;
 }) => {
@@ -123,6 +129,8 @@ export const Scheduler = ({
         HeaderRow: HeaderRow,
         ResourceCell: ResourceCell,
         ResourceHeader: ResourceHeader,
+        UnassignedHeader: UnassignedHeader,
+        UnAssignedBoxProps: UnAssignedBoxProps,
         GridCell: GridCell,
         EventTile: EventTile,
       }}

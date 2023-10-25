@@ -23,9 +23,10 @@ export const events: CalEvent[] = [
     resourceId: '1',
     startTime: addDays(setHours(startOfToday(), 8), 2),
     endTime: addDays(setHours(startOfToday(), 17), 4),
-    title: 'Andy Day2',
+    title: 'Andy Day2 - not draggable',
     bgColor: Colors.fluroRed,
     textColor: 'white',
+    draggable: false,
   },
   {
     id: '3',
@@ -75,6 +76,17 @@ export const events: CalEvent[] = [
     title: 'UA Ev 5',
     bgColor: Colors.greyShadow,
     textColor: 'white',
+  },
+  {
+    id: '9',
+    startTime: addDays(setHours(startOfToday(), 8), -1),
+    endTime: addDays(setHours(startOfToday(), 17), 1),
+    resourceId: '2',
+    title: 'Adam Annual leave',
+    bgColor: Colors.greyShadow,
+    textColor: 'white',
+    allowOverlap: true,
+    draggable: false,
   },
 ];
 

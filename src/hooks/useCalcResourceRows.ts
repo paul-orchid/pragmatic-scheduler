@@ -10,7 +10,7 @@ export const useCalcResourceRows = () => {
 
   return useCallback(
     (resource: Resource): number => {
-      const resourceEvents = events.filter((event) => event.resourceId === resource.id);
+      const resourceEvents = events.filter((event) => event.resourceId === resource.id && event.allowOverlap !== true);
       const maxOverlappingEvents = resourceEvents.reduce(
         (max, event) => Math.max(max, getOverlappingEvents(event).length),
         0,

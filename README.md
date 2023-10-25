@@ -107,12 +107,40 @@ ResourceCell?: React.FC<{ resource: Resource }>;
 // Optionally override each resource header. Check out the demos for examples
 ResourceHeader?: React.FC;
 
+// Optionally override the UnassignedHeader. Check out the demos for examples
+UnassignedHeader?: React.FC;
+
+// Pass mui BoxProps to style the Unassigned events Box
+UnAssignedBoxProps?: BoxProps
+
 // Optionally override how the background grid is displayed. Use this to change the format or add extra information to the grid. Check out the demos for examples
 GridCell?: React.FC<{ layout: GridCellLayout }>;
 
 // Optionally override each Event Tile on the Calendar. Check out the demos for examples
 EventTile?: React.FC<{ event: CalEvent }>;
 ```
+
+### Calendar Events
+
+Each event has the following properties:
+
+```
+export type CalEvent = {
+  id: string;
+  title: string;
+  startTime: Date;
+  endTime: Date;
+  resourceId?: string;
+  bgColor?: string;
+  textColor?: string;
+  draggable?: boolean; // will default to true
+  allowOverlap?: boolean;// will default to false
+};
+```
+
+To disable the dragging and resizing functionality for a specific event set `draggable: false`. See [Weekly](https://paul-orchid.github.io/pragmatic-scheduler/#/week) demo for an example
+
+To allow an event to be overlapped by another set `allowOverlap: true`. See [Weekly](https://paul-orchid.github.io/pragmatic-scheduler/#/week) demo for an example
 
 ### SchedulerDateControls Props
 

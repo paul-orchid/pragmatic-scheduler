@@ -82,11 +82,11 @@ export const events: CalEvent[] = [
     startTime: addDays(setHours(startOfToday(), 8), -1),
     endTime: addDays(setHours(startOfToday(), 17), 1),
     resourceId: '2',
-    title: 'Adam Annual leave',
+    title: 'Adam Annual leave (not resizable)',
     bgColor: Colors.greyShadow,
     textColor: 'white',
     allowOverlap: true,
-    draggable: false,
+    resizable: false,
   },
 ];
 

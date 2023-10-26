@@ -134,11 +134,13 @@ export type CalEvent = {
   bgColor?: string;
   textColor?: string;
   draggable?: boolean; // will default to true
+  resizable?: boolean; // will default to true
   allowOverlap?: boolean;// will default to false
 };
 ```
 
-To disable the dragging and resizing functionality for a specific event set `draggable: false`. See [Weekly](https://paul-orchid.github.io/pragmatic-scheduler/#/week) demo for an example
+To disable the dragging functionality for a specific event set `draggable: false`. See [Weekly](https://paul-orchid.github.io/pragmatic-scheduler/#/week) demo for an example
+To disable the resizing functionality for a specific event set `resizable: false`. See [Weekly](https://paul-orchid.github.io/pragmatic-scheduler/#/week) demo for an example
 
 To allow an event to be overlapped by another set `allowOverlap: true`. See [Weekly](https://paul-orchid.github.io/pragmatic-scheduler/#/week) demo for an example
 

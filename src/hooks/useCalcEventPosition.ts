@@ -72,7 +72,7 @@ export const useCalcEventPosition = () => {
         h: 1,
         maxH: 1,
         isDraggable: event.draggable === false ? false : true,
-        isResizable: event.draggable === false ? false : true,
+        isResizable: event.resizable === false ? false : true,
       };
     },
     [calcResourceRows, days, divisionParts, getOverlappingEvents, resources],

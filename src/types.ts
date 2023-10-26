@@ -32,6 +32,7 @@ export type CalEvent = {
   bgColor?: string;
   textColor?: string;
   draggable?: boolean;
+  resizable?: boolean;
   allowOverlap?: boolean;
 };
 

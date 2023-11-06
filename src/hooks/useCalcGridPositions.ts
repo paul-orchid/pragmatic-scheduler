@@ -26,6 +26,7 @@ export const useCalcGridPositions = () => {
               static: true,
               day: day,
               division: division,
+              resourceId: _resource.id,
             };
           }),
         );

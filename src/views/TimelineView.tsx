@@ -150,6 +150,7 @@ export const TimelineView = () => {
             onResizeStop={handleDragResizeStop}
             layout={layouts}
             onLayoutChange={handleLayoutChange}
+            draggableCancel=".not-draggable"
           >
             {gridLayouts.map((layout) => {
               return (

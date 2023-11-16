@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Box, ClickAwayListener, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, ClickAwayListener, IconButton, Tooltip, Typography } from '@mui/material';
 import { format, startOfToday } from 'date-fns';
 import { Scheduler } from '../components/Scheduler';
 import { CalEvent, Resource, ScheduleDay } from '../types';
@@ -7,6 +7,7 @@ import { divisionDetails, events as rawEvents, resources } from '../data/weekly'
 import { SchedulerDateControls } from '../components/SchedulerDateControls';
 import { SourceCodeLink } from './SourceCodeLink';
 import { Colors } from '../constants/colors';
+import InfoIcon from '@mui/icons-material/Info';
 
 const myDivisionWidth = 160;
 const weekendColor = '#EDF1F6';
@@ -151,10 +152,15 @@ const EventTile = ({ event }: { event: CalEvent }) => {
           height="100%"
           width="100%"
           sx={{ background: event.bgColor, cursor: 'pointer', userSelect: 'none' }}
-          onClick={handleTooltipOpen}
+          // onClick={handleTooltipOpen}
           flexDirection="column"
         >
-          <Typography variant="body2">{event.title} (click me!)</Typography>
+          <Typography variant="body2">
+            {event.title}{' '}
+            <IconButton size="small" onClick={handleTooltipOpen} className="not-draggable">
+              <InfoIcon />
+            </IconButton>
+          </Typography>
           <Typography variant="body2" color={event.textColor || 'text.primary'}>
             {`${format(event.startTime, 'HHmm')}-${format(event.endTime, 'HHmm')}hrs`}
           </Typography>

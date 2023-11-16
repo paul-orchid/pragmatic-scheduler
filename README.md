@@ -144,6 +144,10 @@ To disable the resizing functionality for a specific event set `resizable: false
 
 To allow an event to be overlapped by another set `allowOverlap: true`. See [Weekly](https://paul-orchid.github.io/pragmatic-scheduler/#/week) demo for an example
 
+### Disable dragging for a specific element
+
+If you wnat to disable dragging for specific part of custom `EventTile`, add the class name `not-draggable`. For an example see the info button in the [Weekly](https://paul-orchid.github.io/pragmatic-scheduler/#/week) example
+
 ### SchedulerDateControls Props
 
 The SchedulerDateControls component supports the following properties (see the source for the final word on this):

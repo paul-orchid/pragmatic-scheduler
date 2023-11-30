@@ -3,7 +3,7 @@ import { CalEvent } from '../types';
 import { SchedulerContext } from '../components/Scheduler';
 import { addDays } from 'date-fns';
 import GridLayout from 'react-grid-layout';
-import { useOverlappingEvents } from './useOverlappingEvents';
+import { useOverlappingOffset } from './useOverlappingEvents';
 import { useCalcResourceRows } from './useCalcResourceRows';
 
 export const useCalcEventPosition = () => {
@@ -13,7 +13,7 @@ export const useCalcEventPosition = () => {
     config: { divisionParts },
   } = useContext(SchedulerContext);
 
-  const getOverlappingEvents = useOverlappingEvents();
+  const getOverlappingOffset = useOverlappingOffset();
   const calcResourceRows = useCalcResourceRows();
 
   return useCallback(
@@ -51,7 +51,7 @@ export const useCalcEventPosition = () => {
           divisionCount += day.divisions.length * divisionParts;
         }
       }
-      const overlappingEvents = getOverlappingEvents(event);
+      const overlappingOffset = getOverlappingOffset(event);
 
       // sum up how may rows are use in the previous resources
       let rowCount = 0;
@@ -62,19 +62,19 @@ export const useCalcEventPosition = () => {
         rowCount += calcResourceRows(_resource);
       }
 
-      const y = rowCount + (event.allowOverlap ? 0 : overlappingEvents.length);
+      const y = rowCount + (event.allowOverlap ? 0 : overlappingOffset);
 
       return {
         i: event.id,
         x: x,
         y: y,
-        w: w,
+        w: Number(w.toFixed(4)),
         h: 1,
         maxH: 1,
         isDraggable: event.draggable === false ? false : true,
         isResizable: event.resizable === false ? false : true,
       };
     },
-    [calcResourceRows, days, divisionParts, getOverlappingEvents, resources],
+    [calcResourceRows, days, divisionParts, getOverlappingOffset, resources],
   );
 };

@@ -116,7 +116,7 @@ export const TimelineView = () => {
   return (
     <Box>
       {/* top row */}
-      {config.unAssignedRows && <UnassignedHeader />}
+      {config.unAssignedRows ? <UnassignedHeader /> : null}
       <Box display="flex">
         {/* left side column that does not scroll */}
         <Box
@@ -131,7 +131,7 @@ export const TimelineView = () => {
         </Box>
         {/* right side column that scrolls */}
         <Box position="relative" flex={1} overflow="auto" ref={ref}>
-          {config.unAssignedRows && <UnAssignedEvents onDragStart={handleUnassignedDragStart} />}
+          {config.unAssignedRows ? <UnAssignedEvents onDragStart={handleUnassignedDragStart} /> : null}
           <HeaderRow days={days} />
           <GridLayout
             className="layout"

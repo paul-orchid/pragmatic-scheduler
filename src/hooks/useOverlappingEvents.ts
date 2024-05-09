@@ -3,18 +3,48 @@ import { CalEvent } from '../types';
 import { SchedulerContext } from '../components/Scheduler';
 
 export const useOverlappingOffset = () => {
-  const getOverlappingEvents = useOverlappingEvents();
+  const { events } = useContext(SchedulerContext);
+  const eventsWithResourcePosition = useMemo(() => {
+    const eventsWithOffsetInfo: (CalEvent & {
+      overlappingOffset: number;
+    })[] = [];
+    // keep track of the layout of events
+    const layout: { [resourceId: string]: { [rowNumber: number]: CalEvent[] } } = {};
+    for (const event of events.sort((a, b) => a.startTime.getTime() - b.startTime.getTime())) {
+      if (!event.resourceId) {
+        continue;
+      }
+      // create a layout for each resource if it doesn't exist
+      layout[event.resourceId] = layout[event.resourceId] || {};
+      // get the layout for the resource
+      const layoutResource = layout[event.resourceId];
+      const highestRowAllocated = Math.max(...Object.keys(layoutResource).map((key) => parseInt(key, 10)));
+      let overlappingOffset = 0; // default to 0
+
+      // for each row in the layout, check if the event overlaps with any of the events in the row and
+      // increment the offset
+      for (let i = 0; i <= highestRowAllocated; i++) {
+        const eventsThisRow = layoutResource[overlappingOffset] || [];
+        if (eventsThisRow.some((e) => doEventsOverlap(e, event))) {
+          overlappingOffset++;
+        }
+      }
+      layoutResource[overlappingOffset] = layoutResource[overlappingOffset] || [];
+      layoutResource[overlappingOffset].push(event);
+
+      eventsWithOffsetInfo.push({
+        ...event,
+        overlappingOffset: overlappingOffset,
+      });
+    }
+    return eventsWithOffsetInfo;
+  }, [events]);
 
   return useCallback(
     (event: CalEvent): number => {
-      const overlappingEvents = getOverlappingEvents(event).sort(
-        (a, b) => a.startTime.getTime() - b.startTime.getTime(),
-      );
-      return overlappingEvents.length > 0
-        ? overlappingEvents.reduce((max, event) => Math.max(max, event.overlappingEventsCount), 0) + 1
-        : 0;
+      return eventsWithResourcePosition.find((e) => e.id === event.id)?.overlappingOffset || 0;
     },
-    [getOverlappingEvents],
+    [eventsWithResourcePosition],
   );
 };
 
@@ -28,54 +58,4 @@ const doEventsOverlap = (event1: CalEvent, event2: CalEvent) => {
       (event1.endTime > event2.startTime && event1.endTime <= event2.endTime) ||
       (event1.startTime <= event2.startTime && event1.endTime >= event2.endTime))
   );
-};
-
-export const useOverlappingEvents = () => {
-  const { events } = useContext(SchedulerContext);
-  const eventsWithOverlapCount = useMemo(() => {
-    const eventsWithOffset = [];
-    for (const event of events) {
-      const eventIndex = events.findIndex((e) => e.id === event.id);
-      const overlappingEvents = events.filter((e, index) => {
-        return index < eventIndex && doEventsOverlap(event, e);
-      });
-      const existingMaxOverlap = Math.max(
-        0,
-        ...eventsWithOffset
-          .filter((e) => overlappingEvents.map((e) => e.id).includes(e.id))
-          .map((e) => e.overlappingEventsCount),
-      );
-      eventsWithOffset.push({
-        ...event,
-        overlappingEventsCount: overlappingEvents.length + existingMaxOverlap,
-      });
-    }
-    return eventsWithOffset;
-  }, [events]);
-  return useCallback(
-    (event: CalEvent): (CalEvent & { overlappingEventsCount: number })[] => {
-      const eventIndex = eventsWithOverlapCount.findIndex((e) => e.id === event.id);
-      return eventsWithOverlapCount.filter((e, index) => {
-        return index < eventIndex && doEventsOverlap(event, e);
-      });
-    },
-    [eventsWithOverlapCount],
-  );
-  // return useCallback(
-  //   (event: CalEvent): CalEvent[] => {
-  //     const eventIndex = events.findIndex((e) => e.id === event.id);
-  //     return events.filter((e, index) => {
-  //       return (
-  //         index < eventIndex &&
-  //         e.id !== event.id &&
-  //         e.allowOverlap !== true &&
-  //         e.resourceId === event.resourceId &&
-  //         ((e.startTime >= event.startTime && e.startTime < event.endTime) ||
-  //           (e.endTime > event.startTime && e.endTime <= event.endTime) ||
-  //           (e.startTime <= event.startTime && e.endTime >= event.endTime))
-  //       );
-  //     });
-  //   },
-  //   [events],
-  // );
 };

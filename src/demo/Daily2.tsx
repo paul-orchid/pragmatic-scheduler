@@ -4,7 +4,7 @@ import { addDays, endOfToday, startOfToday } from 'date-fns';
 import { Scheduler } from '../components/Scheduler';
 import { CalEvent } from '../types';
 import { SchedulerDateControls } from '../components/SchedulerDateControls';
-import { divisionDetails, events as rawEvents, resources } from '../data/daily';
+import { resources } from '../data/daily';
 import { SourceCodeLink } from './SourceCodeLink';
 
 function Daily2() {
@@ -32,6 +32,13 @@ function Daily2() {
       startTime: addDays(startOfToday(), 3),
       endTime: addDays(endOfToday(), 4),
     },
+    {
+      id: '5',
+      resourceId: '1',
+      title: 'Event 5',
+      startTime: addDays(startOfToday(), 2),
+      endTime: addDays(endOfToday(), 3),
+    },
   ]);
 
   const handleEventChange = (event: CalEvent) => {
@@ -52,34 +59,12 @@ function Daily2() {
       <Box mb={2} display="flex" justifyContent="center">
         <SchedulerDateControls activeDate={activeDate} setActiveDate={setActiveDate} />
       </Box>
-      {/* <Scheduler
-        activeDate={activeDate}
-        resources={resources}
-        events={events}
-        divisionDetails={divisionDetails}
-        onEventChange={handleEventChange}
-      /> */}
       <Scheduler
         activeDate={activeDate}
         resources={resources}
         onEventChange={handleEventChange}
         events={events}
         divisionDetails={[{ name: 'allDay', startHour: 0, endHour: 24 }]}
-        // UnassignedHeader={UnassignedHeader}
-        // UnAssignedBoxProps={{
-        //   border: border,
-        //   sx: {
-        //     backgroundColor: 'background.default',
-        //   },
-        // }}
-        // onEventChange={handleEventChange}
-        // HeaderRow={HeaderRow}
-        // ResourceCell={ResourceCell}
-        // EventTile={EventTileMemoized}
-        // GridCell={GridCell}
-        // ResourceHeader={() => (
-        //   <ResourceHeader setSortModel={setSortModel} title={resourceTitle} resourceWidth={resourceWidth} />
-        // )}
         config={{
           resourceColumnWidth: 200,
           rowHeight: 70,

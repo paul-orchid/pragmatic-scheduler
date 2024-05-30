@@ -34,6 +34,7 @@ export type CalEvent = {
   draggable?: boolean;
   resizable?: boolean;
   allowOverlap?: boolean;
+  data?: unknown;
 };
 
 export type Config = {
